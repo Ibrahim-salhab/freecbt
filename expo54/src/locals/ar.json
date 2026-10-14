@@ -108,7 +108,12 @@
   "cbt_list": {
     "header": ".FreeCBT",
     "today": "اليوم",
-    "empty": "لا توجد أفكار مسجلة بعد!"
+    "empty": "لا توجد أفكار مسجلة بعد!",
+    "deck_view": "بطاقات",
+    "list_view": "قائمة",
+    "record_counter": "%{current} من %{total}",
+    "prev": "السابق",
+    "next": "التالي"
   },
   "settings": {
     "header": "FreeCBT*",
@@ -186,7 +191,13 @@
     "new": "جديد",
     "save": "حفظ",
     "submit": "حفظ وإنهاء",
-    "auto_thought_placeholder": "مثال: «ينبغي أن أكون أكثر إنتاجية وحماساً»",
+    "auto_thought_placeholder": "ما الذي حدث، وما الفكرة التي راودتك فوراً؟ (الموقف والفكرة التلقائية)",
+    "situation_placeholder": "الموقف والفكرة التلقائية",
+    "emotion_placeholder": "أضف شعوراً (مثال: قلق، غضب، حزن)...",
+    "add": "إضافة",
+    "intensity": "الشدة",
+    "reassessed_emotions": "إعادة تقييم شدة المشاعر",
+    "reassessed_emotions_desc": "ما مدى شدة هذه المشاعر الآن بعد إعادة صياغة أفكارك وتفنيدها؟",
     "cog_distortion": "التشوه المعرفي",
     "challenged": "التفنيد والمناقشة",
     "changed_placeholder": "قد لا يكون صحيحاً أن...",

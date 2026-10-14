@@ -108,7 +108,12 @@
   "cbt_list": {
     "header": ".FreeCBT",
     "today": "Today",
-    "empty": "No thoughts yet!"
+    "empty": "No thoughts yet!",
+    "deck_view": "Cards",
+    "list_view": "List",
+    "record_counter": "%{current} of %{total}",
+    "prev": "Previous",
+    "next": "Next"
   },
   "settings": {
     "header": "FreeCBT*",
@@ -188,7 +193,13 @@
     "save": "Save",
     "submit": "Save & Finish",
     "// auto_thought_placeholder_UNUSED": "ex: \"The plane might crash\"",
-    "auto_thought_placeholder": "ex: \"I should be more motivated\"",
+    "auto_thought_placeholder": "What happened, and what went through your mind? (Situation & Automatic Thought)",
+    "situation_placeholder": "Situation & Automatic Thought",
+    "emotion_placeholder": "Add emotion (e.g. Anxiety, Anger)...",
+    "add": "Add",
+    "intensity": "Intensity",
+    "reassessed_emotions": "Reassess Emotions",
+    "reassessed_emotions_desc": "How intense are these emotions now after reframing your thoughts?",
     "cog_distortion": "Cognitive Distortion",
     "challenged": "Challenge",
     "changed_placeholder": "It might not be true that...",
