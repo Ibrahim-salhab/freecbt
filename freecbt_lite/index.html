@@ -8,6 +8,8 @@
   <meta name="theme-color" content="#4f46e5">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
   <style>
     :root {
@@ -1013,6 +1015,10 @@
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
           جميع بياناتك وأصواتك تشفر محلياً على جهازك قبل حفظها، وتخزن في قاعدة بيانات IndexedDB المعزولة. لا يوجد أي خادم خارجي يرى بياناتك أبداً.
         </p>
+
+        <button id="installAppBtnSettings" class="btn" style="margin-bottom: 12px; background: #059669;" onclick="triggerAppInstall()">
+          <span>📲</span> تثبيت التطبيق على الهاتف (Install App)
+        </button>
 
         <button class="btn btn-secondary" onclick="changePinPrompt()" style="margin-bottom: 10px;">
           <span>🔑</span> تغيير رمز الأمان (PIN)
@@ -2247,6 +2253,42 @@
         localStorage.clear();
         location.reload();
       }
+    }
+
+    // --- PWA INSTALLATION & SERVICE WORKER ---
+    let deferredInstallPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById("installAppBtnSettings");
+      if (btn) btn.style.display = "inline-flex";
+    });
+
+    function triggerAppInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === "accepted") {
+            showToast("جاري تثبيت التطبيق على هاتفك...");
+          }
+          deferredInstallPrompt = null;
+        });
+      } else {
+        const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
+        if (isIos) {
+          alert("لتثبيت التطبيق على آيفون:\n1. اضغط على زر المشاركة (المربع ذو السهم لأعلى ⎋) أسفل شاشة Safari.\n2. اسحب للأسفل واختر «إضافة إلى الشاشة الرئيسية» (Add to Home Screen).\n3. سيظهر التطبيق كأيقونة كاملة على شاشتك.");
+        } else {
+          alert("لتثبيت التطبيق على أندرويد:\nاضغط على قائمة المتصفح (⋮) ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».");
+        }
+      }
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => {
+          console.log("SW registration failed: ", err);
+        });
+      });
     }
   </script>
 </body>
