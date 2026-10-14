@@ -1168,7 +1168,7 @@
 
     // CBT Multi-Emotions state
     let cbtEmotions = [
-      { id: 1, name: "قلق", intensity: 75, reassessed: 75 }
+      { id: 1, name: "قلق", intensity: 50, reassessed: 50 }
     ];
 
     // --- INITIALIZATION ---
@@ -1668,7 +1668,7 @@
 
     function addEmotionRow() {
       const newId = Date.now();
-      cbtEmotions.push({ id: newId, name: "", intensity: 75, reassessed: 75 });
+      cbtEmotions.push({ id: newId, name: "", intensity: 50, reassessed: 50 });
       renderEmotionsInputs();
     }
 
@@ -1880,7 +1880,7 @@
       cbtAudioBlob = null;
       cbtAudioArrayBuffer = null;
       document.getElementById("cbtAudioPreview").style.display = "none";
-      cbtEmotions = [{ id: 1, name: "قلق", intensity: 75, reassessed: 75 }];
+      cbtEmotions = [{ id: 1, name: "قلق", intensity: 50, reassessed: 50 }];
       renderEmotionsInputs();
 
       showToast("تم الحفظ بنجاح!");
