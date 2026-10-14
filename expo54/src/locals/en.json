@@ -216,6 +216,22 @@
     "badge": "Free Note",
     "saved_success": "Saved successfully!"
   },
+  "stats": {
+    "tab": "Stats",
+    "header": "My Insights & Progress",
+    "streak_title": "Daily Streak",
+    "streak_unit": "days",
+    "total_thoughts": "Total Thoughts",
+    "this_week": "This Week",
+    "relief_title": "Emotional Relief",
+    "relief_desc": "Average decrease in emotional distress after challenging thoughts.",
+    "no_relief_data": "Reassess your emotions in thoughts to see your relief rate!",
+    "distortions_title": "Top Thinking Patterns",
+    "no_distortions_data": "Select cognitive distortions in thoughts to see your top patterns.",
+    "emotions_title": "Most Frequent Emotions",
+    "no_emotions_data": "Add emotions to your thoughts to track your emotional landscape.",
+    "encouragement": "Every thought challenged is a step toward clarity and peace."
+  },
   "explanation_screen": {
     "header": "FreeCBT.",
     "intro": "Intro"

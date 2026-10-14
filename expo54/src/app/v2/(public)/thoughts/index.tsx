@@ -4,6 +4,7 @@ import { useSafeWindowDimensions } from "@/src/hooks/use-safe-area";
 import { Action, Model, Thought } from "@/src/model";
 import { EmotionDeltaBadge } from "@/src/view/emotion-badge";
 import { ThoughtCard } from "@/src/view/thought-card";
+import { ThoughtsStats } from "@/src/view/thoughts-stats";
 import { Feather } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,7 +30,7 @@ export default function Index() {
 
 function Ready(props: ModelLoadedProps) {
   const { model, dispatch, style: s, translate: t } = props;
-  const [viewMode, setViewMode] = useState<"deck" | "list">("deck");
+  const [viewMode, setViewMode] = useState<"deck" | "list" | "stats">("deck");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Newest thoughts first for the swipeable deck
@@ -68,7 +69,7 @@ function Ready(props: ModelLoadedProps) {
   const activeBtnBg = "#546de5";
   const isRtl = locale === "ar" || locale === "fa";
 
-  const handleDelete = (uuid: string) => {
+  const handleDelete = (uuid: Thought.Id) => {
     const title = locale === "ar" ? "حذف الفكرة" : "Delete Thought";
     const message =
       locale === "ar"
@@ -155,10 +156,7 @@ function Ready(props: ModelLoadedProps) {
               </TouchableOpacity>
 
               <Text style={[styles.counterText, { color: textColor }]}>
-                {t("cbt_list.record_counter", {
-                  current: currentIndex + 1,
-                  total: allThoughts.length,
-                }) || `${currentIndex + 1} / ${allThoughts.length}`}
+                {`${currentIndex + 1} / ${allThoughts.length}`}
               </Text>
 
               <TouchableOpacity
@@ -180,10 +178,14 @@ function Ready(props: ModelLoadedProps) {
                 />
               </TouchableOpacity>
             </View>
-          ) : (
+          ) : viewMode === "list" ? (
             <Text style={[s.subheader, { marginBottom: 0 }]}>
               {allThoughts.length}{" "}
               {locale === "ar" ? "أفكار مسجلة" : "Thoughts"}
+            </Text>
+          ) : (
+            <Text style={[s.subheader, { marginBottom: 0 }]}>
+              {t("stats.tab") || (locale === "ar" ? "الإحصائيات" : "Stats")}
             </Text>
           )}
 
@@ -230,6 +232,28 @@ function Ready(props: ModelLoadedProps) {
                 ]}
               >
                 {t("cbt_list.list_view") || "List"}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.toggleBtn,
+                viewMode === "stats" && { backgroundColor: activeBtnBg },
+              ]}
+              onPress={() => setViewMode("stats")}
+            >
+              <Feather
+                name="bar-chart-2"
+                size={14}
+                color={viewMode === "stats" ? "#fff" : textColor}
+              />
+              <Text
+                style={[
+                  styles.toggleText,
+                  { color: viewMode === "stats" ? "#fff" : textColor },
+                ]}
+              >
+                {t("stats.tab") || (locale === "ar" ? "الإحصائيات" : "Stats")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -286,7 +310,7 @@ function Ready(props: ModelLoadedProps) {
               />
             )}
           </View>
-        ) : (
+        ) : viewMode === "list" ? (
           <ScrollView style={styles.listScrollView}>
             {dateGroups.map(([date, thoughts]) => (
               <React.Fragment key={date}>
@@ -355,6 +379,14 @@ function Ready(props: ModelLoadedProps) {
               </React.Fragment>
             ))}
           </ScrollView>
+        ) : (
+          <ThoughtsStats
+            model={model}
+            style={s}
+            translate={t}
+            isDark={isDark}
+            locale={locale}
+          />
         )}
 
         {/* Dual Floating Action Buttons: Free Write & New Thought */}
