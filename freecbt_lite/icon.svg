@@ -1,10 +1,82 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#4338ca;stop-opacity:1" />
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="45%" stop-color="#3730a3" />
+      <stop offset="100%" stop-color="#6366f1" />
     </linearGradient>
+    
+    <!-- Brain / Glow Gradients -->
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e7ff" />
+    </linearGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.45" />
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="128" fill="url(#grad)" />
-  <text x="50%" y="54%" font-size="280" text-anchor="middle" dominant-baseline="central">🧠</text>
+
+  <!-- Squircle Container -->
+  <rect width="512" height="512" rx="120" fill="url(#bgGrad)" />
+  <!-- Inner Glass Border -->
+  <rect x="6" y="6" width="500" height="500" rx="114" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="4" />
+
+  <!-- Ambient Light -->
+  <circle cx="256" cy="256" r="150" fill="#818cf8" opacity="0.3" filter="blur(36px)" />
+
+  <!-- Premium Vector Brain & Rational Clarity Emblem -->
+  <g filter="url(#shadow)">
+    <!-- Left Hemisphere -->
+    <path d="M 238 126 
+             C 178 126 138 160 138 206 
+             C 116 214 100 236 100 262 
+             C 100 286 116 308 138 316 
+             C 138 350 168 388 222 396 
+             C 232 397 238 389 238 379 
+             L 238 126 Z" 
+          fill="url(#glowGrad)" />
+
+    <!-- Right Hemisphere -->
+    <path d="M 274 126 
+             C 334 126 374 160 374 206 
+             C 396 214 412 236 412 262 
+             C 412 286 396 308 374 316 
+             C 374 350 344 388 290 396 
+             C 280 397 274 389 274 379 
+             L 274 126 Z" 
+          fill="url(#glowGrad)" />
+
+    <!-- Brain Folds & Neural Paths -->
+    <!-- Left Folds -->
+    <path d="M 160 216 C 185 210 206 230 200 252 C 196 268 172 272 158 262" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 152 304 C 178 298 204 322 194 348" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 206 170 C 222 165 238 180 238 198" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" />
+
+    <!-- Right Folds -->
+    <path d="M 352 216 C 327 210 306 230 312 252 C 316 268 340 272 354 262" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 360 304 C 334 298 308 322 318 348" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 306 170 C 290 165 274 180 274 198" 
+          fill="none" stroke="#4338ca" stroke-width="12" stroke-linecap="round" />
+
+    <!-- Central Spark of Rational Clarity (CBT Insight Star) -->
+    <g transform="translate(256, 260)">
+      <path d="M 0 -44 Q 0 0 44 0 Q 0 0 0 44 Q 0 0 -44 0 Q 0 0 0 -44 Z" 
+            fill="url(#accentGrad)" />
+      <circle cx="0" cy="0" r="10" fill="#ffffff" />
+    </g>
+  </g>
 </svg>
