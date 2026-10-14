@@ -750,7 +750,43 @@
       background: var(--primary-soft);
     }
 
-    /* History Cards */
+    /* History Filters */
+    .history-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-pill {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    }
+
+    /* History Cards (Clickable & Truncated) */
     .history-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -759,13 +795,24 @@
       margin-bottom: 14px;
       box-shadow: var(--shadow);
       position: relative;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .history-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .history-card:active {
+      transform: scale(0.99);
     }
 
     .history-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .history-tag {
@@ -789,18 +836,34 @@
       color: var(--text);
     }
 
-    .history-body {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 10px;
+    .history-body-truncated {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: pre-wrap;
+    }
+
+    .read-more-hint {
+      font-size: 0.76rem;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .history-emotions-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
     .badge-relief-good {
@@ -827,6 +890,139 @@
       font-size: 0.8rem;
       font-weight: 600;
       border: 1px solid var(--border);
+    }
+
+    /* Full Note Reader & Editor Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      border-radius: 20px 20px 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 18px calc(16px + env(safe-area-inset-bottom));
+      animation: modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-nav-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-arrow-btn {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .nav-arrow-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .modal-counter {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .modal-close-btn {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .modal-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 6px;
+    }
+
+    .modal-body-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 2px 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
 
     .history-actions {
@@ -1085,9 +1281,16 @@
 
     <!-- SCREEN 3: HISTORY (السجل) -->
     <div id="screen-history" class="screen">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="font-size: 1.1rem; font-weight: 700;">سجل التدوينات والأفكار</h3>
         <span id="historyCount" style="font-size: 0.85rem; color: var(--text-muted);">0 تدوينة</span>
+      </div>
+
+      <!-- History Filter Pills -->
+      <div class="history-filter-bar">
+        <button class="filter-pill active" data-filter="all" onclick="setHistoryFilter('all')">الكل (<span id="count-all">0</span>)</button>
+        <button class="filter-pill" data-filter="free_write" onclick="setHistoryFilter('free_write')">✏️ تدوين حر (<span id="count-fw">0</span>)</button>
+        <button class="filter-pill" data-filter="cbt" onclick="setHistoryFilter('cbt')">🧠 تفكيك أفكار (<span id="count-cbt">0</span>)</button>
       </div>
 
       <div id="historyList"></div>
@@ -1191,6 +1394,41 @@
 
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
+
+  <!-- Note Reader & Editor Modal with Swipe Navigation -->
+  <div id="noteModalOverlay" class="modal-overlay" onclick="closeNoteModal(event)">
+    <div id="noteModalCard" class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-nav-row">
+          <button id="modalBtnNext" class="nav-arrow-btn" onclick="nextNote()" title="الملاحظة التالية">◀ التالي</button>
+          <span id="modalCounter" class="modal-counter">1 / 1</span>
+          <button id="modalBtnPrev" class="nav-arrow-btn" onclick="prevNote()" title="الملاحظة السابقة">السابق ▶</button>
+        </div>
+        <button class="modal-close-btn" onclick="closeNoteModal()" title="إغلاق">✕</button>
+      </div>
+
+      <div class="modal-meta-row">
+        <span id="modalTypeTag" class="history-tag"></span>
+        <span id="modalDate" class="history-time"></span>
+      </div>
+
+      <div id="modalBodyContainer" class="modal-body-scroll">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="saveModalEdits()" style="flex: 2;">
+          💾 حفظ التعديلات
+        </button>
+        <button class="btn btn-secondary" onclick="shareCurrentModalNote()" style="flex: 1;" title="مشاركة">
+          📤 مشاركة
+        </button>
+        <button class="btn btn-danger" onclick="deleteCurrentModalNote()" style="flex: 1;" title="حذف">
+          🗑️ حذف
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // --- 11 AUTHENTIC COGNITIVE DISTORTIONS (FROM ORIGINAL FREECBT) ---
@@ -2060,27 +2298,75 @@
       switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
     }
 
+    // --- ESCAPE HTML HELPER ---
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // --- HISTORY FILTER & FULL NOTE MODAL LOGIC (SWIPE & EDIT) ---
+    let currentHistoryFilter = "all";
+    let activeModalIndex = -1;
+    let activeModalItems = [];
+
+    function setHistoryFilter(filter) {
+      currentHistoryFilter = filter;
+      document.querySelectorAll(".filter-pill").forEach(pill => {
+        if (pill.dataset.filter === filter) pill.classList.add("active");
+        else pill.classList.remove("active");
+      });
+      renderHistoryUI();
+    }
+
+    function getFilteredHistory() {
+      if (currentHistoryFilter === "free_write") {
+        return decryptedItemsCache.filter(it => it.type === "free_write");
+      } else if (currentHistoryFilter === "cbt") {
+        return decryptedItemsCache.filter(it => it.type !== "free_write");
+      }
+      return decryptedItemsCache;
+    }
+
     // --- LOAD & RENDER HISTORY (TITLES, SHARING, WAVEFORMS, ELEGANT BADGES) ---
     function renderHistoryUI() {
       const listEl = document.getElementById("historyList");
       if (!listEl) return;
       listEl.innerHTML = "";
-      const count = decryptedItemsCache.length;
-      const countEl = document.getElementById("historyCount");
-      if (countEl) countEl.innerText = `${count} تدوينات`;
 
-      if (count === 0) {
+      const totalCount = decryptedItemsCache.length;
+      const fwCount = decryptedItemsCache.filter(it => it.type === "free_write").length;
+      const cbtCount = decryptedItemsCache.filter(it => it.type !== "free_write").length;
+
+      const cAll = document.getElementById("count-all");
+      if (cAll) cAll.innerText = totalCount;
+      const cFw = document.getElementById("count-fw");
+      if (cFw) cFw.innerText = fwCount;
+      const cCbt = document.getElementById("count-cbt");
+      if (cCbt) cCbt.innerText = cbtCount;
+
+      const countEl = document.getElementById("historyCount");
+      if (countEl) countEl.innerText = `${totalCount} تدوينات`;
+
+      const displayList = getFilteredHistory();
+
+      if (displayList.length === 0) {
         listEl.innerHTML = `<div class="card" style="text-align: center; color: var(--text-muted); padding: 30px;">
           <div style="font-size: 32px; margin-bottom: 8px;">📖</div>
-          لا توجد أفكار أو تدوينات مسجلة بعد. ابدأ بكتابة تدوينة حرة أو تفكيك فكرة!
+          ${currentHistoryFilter === 'all' ? 'لا توجد أفكار أو تدوينات مسجلة بعد. ابدأ بكتابة تدوينة حرة أو تفكيك فكرة!' : 'لا توجد تدوينات في هذا التصنيف حالياً.'}
         </div>`;
         return;
       }
 
-      for (const item of decryptedItemsCache) {
+      for (const item of displayList) {
         const card = document.createElement("div");
         card.className = "history-card";
         card.id = `history-card-${item.id}`;
+        card.onclick = () => openNoteModal(item.id);
 
         const dateStr = new Date(item.createdAt).toLocaleDateString("ar-EG", {
           month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
@@ -2096,29 +2382,30 @@
               <span class="history-tag">✏️ تدوين حر</span>
               <span class="history-time">${dateStr}</span>
             </div>
-            <h4 class="history-title">${displayTitle}</h4>
-            <div class="history-body">${item.body || ""}</div>
+            <h4 class="history-title">${escapeHtml(displayTitle)}</h4>
+            <div class="history-body-truncated">${escapeHtml(item.body || "")}</div>
+            <div class="read-more-hint">عرض وقراءة كاملة / تعديل 👈</div>
           `;
         } else {
-          // CBT Thought: Title is the Rational Alternative Thought!
+          // CBT Thought
           const displayTitle = item.alternativeThought || item.automaticThought || "فكرة بديلة";
 
           if (item.emotions && Array.isArray(item.emotions)) {
             emotionsBadgesHtml = item.emotions.map(em => {
               const drop = em.intensity - em.reassessed;
               if (drop > 0) {
-                return `<span class="badge-relief-good">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (↓ ${drop}%)</span>`;
+                return `<span class="badge-relief-good">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (↓ ${drop}%)</span>`;
               } else if (drop === 0) {
-                return `<span class="badge-relief-neutral">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (ثابت)</span>`;
+                return `<span class="badge-relief-neutral">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (ثابت)</span>`;
               } else {
-                return `<span class="badge-relief-neutral">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (↑ ${Math.abs(drop)}%)</span>`;
+                return `<span class="badge-relief-neutral">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (↑ ${Math.abs(drop)}%)</span>`;
               }
             }).join(" ");
           } else if (item.emotion) {
             const drop = item.emotion.intensity - item.emotion.reassessed;
             emotionsBadgesHtml = drop > 0
-              ? `<span class="badge-relief-good">${item.emotion.name}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (↓ ${drop}%)</span>`
-              : `<span class="badge-relief-neutral">${item.emotion.name}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (ثابت)</span>`;
+              ? `<span class="badge-relief-good">${escapeHtml(item.emotion.name)}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (↓ ${drop}%)</span>`
+              : `<span class="badge-relief-neutral">${escapeHtml(item.emotion.name)}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (ثابت)</span>`;
           }
 
           contentHtml = `
@@ -2126,26 +2413,27 @@
               <span class="history-tag" style="background: rgba(16,185,129,0.1); color: var(--success);">🧠 فكرة CBT</span>
               <span class="history-time">${dateStr}</span>
             </div>
-            <h4 class="history-title">💡 ${displayTitle}</h4>
+            <h4 class="history-title">💡 ${escapeHtml(displayTitle)}</h4>
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
-              💭 الفكرة التلقائية: "${item.automaticThought || item.title}"
+              💭 الفكرة التلقائية: "${escapeHtml(item.automaticThought || item.title)}"
             </div>
-            ${item.situation ? `<div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">الموقف: ${item.situation}</div>` : ''}
+            ${item.situation ? `<div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">الموقف: ${escapeHtml(item.situation)}</div>` : ''}
             <div class="history-emotions-row">${emotionsBadgesHtml}</div>
+            <div class="read-more-hint">عرض التفاصيل / تعديل 👈</div>
           `;
         }
 
         let audioContainerHtml = "";
         if (item.audio) {
-          audioContainerHtml = `<div id="audio-player-${item.id}"></div>`;
+          audioContainerHtml = `<div id="audio-player-${item.id}" onclick="event.stopPropagation()"></div>`;
         }
 
         card.innerHTML = contentHtml + audioContainerHtml + `
-          <div class="history-actions">
-            <button class="icon-btn" onclick="shareRecord('${item.id}')" title="مشاركة التدوينة" style="width: 34px; height: 34px;">
+          <div class="history-actions" onclick="event.stopPropagation()">
+            <button class="icon-btn" onclick="shareRecord('${item.id}'); event.stopPropagation();" title="مشاركة التدوينة" style="width: 34px; height: 34px;">
               <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             </button>
-            <button class="icon-btn" onclick="deleteItem('${item.id}')" title="حذف" style="width: 34px; height: 34px; color: var(--danger);">
+            <button class="icon-btn" onclick="deleteItem('${item.id}'); event.stopPropagation();" title="حذف" style="width: 34px; height: 34px; color: var(--danger);">
               <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
@@ -2163,6 +2451,235 @@
       }
     }
     const loadHistory = renderHistoryUI;
+
+    // --- FULL NOTE READER & EDITOR MODAL (WITH SWIPE & ARROWS) ---
+    function openNoteModal(itemId) {
+      activeModalItems = getFilteredHistory();
+      activeModalIndex = activeModalItems.findIndex(it => it.id === itemId);
+      if (activeModalIndex === -1) {
+        activeModalItems = decryptedItemsCache;
+        activeModalIndex = activeModalItems.findIndex(it => it.id === itemId);
+      }
+      if (activeModalIndex === -1) return;
+
+      renderModalContent();
+      const overlay = document.getElementById("noteModalOverlay");
+      if (overlay) overlay.classList.add("active");
+    }
+
+    function closeNoteModal(e) {
+      if (e && e.target && e.target.id !== "noteModalOverlay" && !e.target.classList.contains("modal-close-btn")) {
+        return;
+      }
+      const overlay = document.getElementById("noteModalOverlay");
+      if (overlay) overlay.classList.remove("active");
+      if (activeAudio) {
+        activeAudio.pause();
+        activeAudio = null;
+      }
+    }
+
+    function nextNote() {
+      if (activeModalIndex < activeModalItems.length - 1) {
+        activeModalIndex++;
+        renderModalContent();
+      }
+    }
+
+    function prevNote() {
+      if (activeModalIndex > 0) {
+        activeModalIndex--;
+        renderModalContent();
+      }
+    }
+
+    function renderModalContent() {
+      const item = activeModalItems[activeModalIndex];
+      if (!item) return;
+
+      const total = activeModalItems.length;
+      const counterEl = document.getElementById("modalCounter");
+      if (counterEl) counterEl.innerText = `${activeModalIndex + 1} / ${total}`;
+
+      const btnPrev = document.getElementById("modalBtnPrev");
+      const btnNext = document.getElementById("modalBtnNext");
+      if (btnPrev) btnPrev.disabled = (activeModalIndex <= 0);
+      if (btnNext) btnNext.disabled = (activeModalIndex >= total - 1);
+
+      const typeTag = document.getElementById("modalTypeTag");
+      if (typeTag) {
+        if (item.type === "free_write") {
+          typeTag.className = "history-tag";
+          typeTag.style.background = "var(--primary-soft)";
+          typeTag.style.color = "var(--primary)";
+          typeTag.innerText = "✏️ تدوين حر";
+        } else {
+          typeTag.className = "history-tag";
+          typeTag.style.background = "rgba(16,185,129,0.12)";
+          typeTag.style.color = "var(--success)";
+          typeTag.innerText = "🧠 تفكيك أفكار CBT";
+        }
+      }
+
+      const dateStr = new Date(item.createdAt).toLocaleString("ar-EG", {
+        month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+      });
+      const dateEl = document.getElementById("modalDate");
+      if (dateEl) dateEl.innerText = dateStr;
+
+      const container = document.getElementById("modalBodyContainer");
+      if (!container) return;
+
+      if (item.type === "free_write") {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">العنوان</label>
+            <input type="text" id="editFwTitle" value="${escapeHtml(item.title || '')}" placeholder="عنوان التدوينة...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">النص والتفريغ الحر (كامل وقابل للتعديل)</label>
+            <textarea id="editFwBody" rows="8" placeholder="اكتب كل ما يجول في خاطرك...">${escapeHtml(item.body || '')}</textarea>
+          </div>
+          ${item.audio ? `<div class="form-group"><label class="form-label">الملاحظة الصوتية</label><div id="modalAudioBox"></div></div>` : ''}
+        `;
+      } else {
+        let emotionsBadgesHtml = "";
+        if (item.emotions && Array.isArray(item.emotions)) {
+          emotionsBadgesHtml = item.emotions.map(em => {
+            const drop = em.intensity - em.reassessed;
+            if (drop > 0) {
+              return `<span class="badge-relief-good">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (↓ ${drop}%)</span>`;
+            } else if (drop === 0) {
+              return `<span class="badge-relief-neutral">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (ثابت)</span>`;
+            } else {
+              return `<span class="badge-relief-neutral">${escapeHtml(em.name)}: ${em.intensity}% ➔ ${em.reassessed}% (↑ ${Math.abs(drop)}%)</span>`;
+            }
+          }).join(" ");
+        }
+
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">💡 الفكرة العقلانية البديلة (المواجهة)</label>
+            <input type="text" id="editCbtAlt" value="${escapeHtml(item.alternativeThought || item.title || '')}" placeholder="الفكرة البديلة...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">💭 الفكرة التلقائية السريعة</label>
+            <textarea id="editCbtAuto" rows="3" placeholder="الفكرة التلقائية...">${escapeHtml(item.automaticThought || '')}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">الموقف</label>
+            <textarea id="editCbtSit" rows="2" placeholder="الموقف...">${escapeHtml(item.situation || '')}</textarea>
+          </div>
+          ${emotionsBadgesHtml ? `<div class="form-group"><label class="form-label">المشاعر المسجلة والتحسن</label><div class="history-emotions-row">${emotionsBadgesHtml}</div></div>` : ''}
+          ${item.audio ? `<div class="form-group"><label class="form-label">الملاحظة الصوتية</label><div id="modalAudioBox"></div></div>` : ''}
+        `;
+      }
+
+      if (item.audio) {
+        try {
+          const buffer = base64ToArrayBuffer(item.audio);
+          const blob = new Blob([buffer], { type: "audio/webm" });
+          renderWaveformPlayer("modalAudioBox", blob);
+        } catch(e) {}
+      }
+    }
+
+    async function saveModalEdits() {
+      const item = activeModalItems[activeModalIndex];
+      if (!item) return;
+
+      if (item.type === "free_write") {
+        const titleEl = document.getElementById("editFwTitle");
+        const bodyEl = document.getElementById("editFwBody");
+        if (titleEl) item.title = titleEl.value.trim() || "تدوين حر";
+        if (bodyEl) item.body = bodyEl.value.trim();
+      } else {
+        const altEl = document.getElementById("editCbtAlt");
+        const autoEl = document.getElementById("editCbtAuto");
+        const sitEl = document.getElementById("editCbtSit");
+        if (altEl) {
+          item.alternativeThought = altEl.value.trim();
+          item.title = item.alternativeThought || item.automaticThought || "فكرة بديلة";
+        }
+        if (autoEl) item.automaticThought = autoEl.value.trim();
+        if (sitEl) item.situation = sitEl.value.trim();
+      }
+
+      // 1. Instant O(1) in-memory render
+      renderHistoryUI();
+      calculateStatsSync();
+      showToast("تم حفظ التعديلات بنجاح! 💾");
+
+      // 2. Background persistence to IndexedDB
+      if (currentCryptoKey) {
+        encryptPayload(currentCryptoKey, item).then(async (encrypted) => {
+          const record = {
+            id: item.id,
+            createdAt: item.createdAt,
+            type: item.type,
+            encrypted
+          };
+          const db = await openDB();
+          if (db) {
+            try {
+              const tx = db.transaction(STORE_NAME, "readwrite");
+              tx.objectStore(STORE_NAME).put(record);
+            } catch(e) {}
+          } else {
+            const raw = localStorage.getItem("freecbt_items");
+            if (raw) {
+              const list = JSON.parse(raw);
+              const idx = list.findIndex(r => r.id === item.id);
+              if (idx !== -1) list[idx] = record;
+              else list.unshift(record);
+              localStorage.setItem("freecbt_items", JSON.stringify(list));
+            }
+          }
+        });
+      }
+    }
+
+    function shareCurrentModalNote() {
+      const item = activeModalItems[activeModalIndex];
+      if (item) shareRecord(item.id);
+    }
+
+    function deleteCurrentModalNote() {
+      const item = activeModalItems[activeModalIndex];
+      if (!item) return;
+      deleteItem(item.id);
+      closeNoteModal();
+    }
+
+    // Touch Swipe navigation for the Modal
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener("DOMContentLoaded", () => {
+      const modalContent = document.getElementById("noteModalCard");
+      if (modalContent) {
+        modalContent.addEventListener("touchstart", (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        modalContent.addEventListener("touchend", (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          const diff = touchEndX - touchStartX;
+          if (Math.abs(diff) > 50) {
+            // In RTL: swipe left (diff < -50) goes to Next; swipe right (diff > 50) goes to Prev
+            if (diff < -50) nextNote();
+            else if (diff > 50) prevNote();
+          }
+        }, { passive: true });
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      const modal = document.getElementById("noteModalOverlay");
+      if (modal && modal.classList.contains("active")) {
+        if (e.key === "Escape") closeNoteModal();
+        else if (e.key === "ArrowLeft") nextNote();
+        else if (e.key === "ArrowRight") prevNote();
+      }
+    });
 
     // --- SHARE NOTE RECORD ---
     async function shareRecord(itemId) {
