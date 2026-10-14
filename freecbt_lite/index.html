@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FreeCBT Lite — تفكيك الأفكار وتدوين مشفر</title>
+  <meta name="description" content="تطبيق عربي خفيف وفائق السرعة لتفكيك الأفكار بالعلاج المعرفي السلوكي وتسجيل الملاحظات الصوتية المشفرة">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-soft: rgba(79, 70, 229, 0.1);
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #818cf8;
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.1);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.1);
+      --warning: #f59e0b;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Tajawal", "Cairo", sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #090d16;
+      --card-bg: #131b2e;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --border-focus: #6366f1;
+      --primary-soft: rgba(99, 102, 241, 0.15);
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: text;
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 16px 90px;
+    }
+
+    /* Bottom Navigation Bar */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="password"], textarea, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    /* Fast O(1) writing text area */
+    .free-textarea {
+      min-height: 220px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    .btn-danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* Audio Recording Section */
+    .recorder-box {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 16px;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .record-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .record-btn.recording {
+      animation: pulse 1.2s infinite;
+      background: #dc2626;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .record-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .audio-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 16px;
+      margin-top: 12px;
+    }
+
+    /* Distortions Grid */
+    .distortion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .distortion-tag {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .distortion-tag.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Slider */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Lock Screen Overlay */
+    #lockScreen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .pin-display {
+      display: flex;
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .pin-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .pin-dot.filled {
+      background: var(--primary);
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .keypad-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      box-shadow: var(--shadow);
+    }
+
+    .keypad-btn:active {
+      transform: scale(0.92);
+      background: var(--primary-soft);
+    }
+
+    /* List items in History */
+    .history-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .history-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .history-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .history-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .history-body {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+
+    .history-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-lbl {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .habit-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .habit-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .habit-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .habit-circle.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Notification toast */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Lock Screen for Secure PIN Unlock -->
+  <div id="lockScreen">
+    <div style="font-size: 48px; margin-bottom: 12px;">🔒</div>
+    <h2 id="lockTitle" style="font-size: 1.35rem; font-weight: 800; margin-bottom: 6px;">خزانة الأفكار المشفرة</h2>
+    <p id="lockSubtitle" style="font-size: 0.85rem; color: var(--text-muted); text-align: center; max-width: 280px;">
+      أدخل رمز الأمان (PIN) المكون من 4 أرقام لفك تشفير أفكارك وتسجيلاتك
+    </p>
+
+    <div class="pin-display">
+      <div class="pin-dot" id="dot1"></div>
+      <div class="pin-dot" id="dot2"></div>
+      <div class="pin-dot" id="dot3"></div>
+      <div class="pin-dot" id="dot4"></div>
+    </div>
+
+    <div class="keypad">
+      <button class="keypad-btn" onclick="pressPin('1')">1</button>
+      <button class="keypad-btn" onclick="pressPin('2')">2</button>
+      <button class="keypad-btn" onclick="pressPin('3')">3</button>
+      <button class="keypad-btn" onclick="pressPin('4')">4</button>
+      <button class="keypad-btn" onclick="pressPin('5')">5</button>
+      <button class="keypad-btn" onclick="pressPin('6')">6</button>
+      <button class="keypad-btn" onclick="pressPin('7')">7</button>
+      <button class="keypad-btn" onclick="pressPin('8')">8</button>
+      <button class="keypad-btn" onclick="pressPin('9')">9</button>
+      <button class="keypad-btn" onclick="clearPin()" style="font-size: 0.95rem;">مسح</button>
+      <button class="keypad-btn" onclick="pressPin('0')">0</button>
+      <button class="keypad-btn" onclick="deletePin()" style="font-size: 1.1rem;">⌫</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <span style="font-size: 1.4rem;">🧠</span>
+      <div>FreeCBT <span>Lite</span></div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="تغيير المظهر">
+        <span id="themeIcon">🌙</span>
+      </button>
+      <button class="icon-btn" onclick="lockApp()" title="قفل التطبيق">
+        🔒
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- SCREEN 1: FREE WRITING (الكتابة الحرة السريعة O(1)) -->
+    <div id="screen-free-write" class="screen active">
+      <div class="card">
+        <div class="card-title">
+          <span>✏️</span> كتابة وتفريغ حر فوري
+        </div>
+
+        <div class="form-group">
+          <input type="text" id="fwTitle" placeholder="عنوان التدوينة (اختياري)...">
+        </div>
+
+        <div class="form-group">
+          <textarea id="fwBody" class="free-textarea" placeholder="اكتب كل ما يجول في خاطرك بحرية تامة دون قيود... كتابتك تستجيب فوراً ومحمية بتشفير عسكري." oninput="updateCounters()"></textarea>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
+            <span id="fwCounters">0 كلمة | 0 حرف</span>
+            <span id="fwTimestamp"></span>
+          </div>
+        </div>
+
+        <!-- Encrypted Audio Section -->
+        <div class="recorder-box">
+          <button id="recordBtn" class="record-btn" onclick="toggleRecording()" title="تسجيل صوتي مشفر">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <div id="recordStatus" class="record-status">اضغط لتسجيل ملاحظة صوتية مشفرة</div>
+          <div id="recordTimer" style="font-size: 1.1rem; font-weight: 700; color: var(--danger); display: none; margin-top: 4px;">00:00</div>
+          
+          <div id="audioPreview" style="display: none; margin-top: 12px;">
+            <div class="audio-preview">
+              <button class="icon-btn" onclick="playRecordedAudio()" style="width: 32px; height: 32px;" title="تشغيل">▶️</button>
+              <span id="audioDurationText" style="font-size: 0.85rem; font-weight: 600;">ملاحظة صوتية جاهزة</span>
+              <button class="icon-btn" onclick="discardAudio()" style="width: 32px; height: 32px; color: var(--danger);" title="حذف">🗑️</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn" onclick="saveFreeWrite()">
+          <span>💾</span> حفظ التدوينة المشفرة
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: CBT 5-STEP THOUGHT RECORD (تفكيك الفكرة) -->
+    <div id="screen-cbt" class="screen">
+      <div class="card">
+        <div class="card-title">
+          <span>🧠</span> تفكيك فكرة (خطوات CBT الخمس)
+        </div>
+
+        <!-- الخطوة 1: الموقف -->
+        <div class="form-group">
+          <label class="form-label">1. الموقف (ماذا حدث؟ ومتى؟)</label>
+          <textarea id="cbtSituation" rows="2" placeholder="مثال: أرسلت رسالة لمديري ولم يرد طوال اليوم..."></textarea>
+        </div>
+
+        <!-- الخطوة 2: الفكرة التلقائية -->
+        <div class="form-group">
+          <label class="form-label">2. الفكرة التلقائية السريعة (ماذا قفز لذهنك فوراً؟)</label>
+          <textarea id="cbtAutomatic" rows="2" placeholder="مثال: من المؤكد أنه غاضب مني وسأُفصل من العمل..."></textarea>
+        </div>
+
+        <!-- الخطوة 3: المشاعر وشدتها الأولية -->
+        <div class="form-group">
+          <label class="form-label">3. المشاعر وشدتها الأولية</label>
+          <input type="text" id="cbtEmotionName" placeholder="اسم الشعور (قلق، خوف، إحباط، حزن)..." style="margin-bottom: 8px;">
+          <div class="slider-container">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">خفيف</span>
+            <input type="range" id="cbtInitialIntensity" min="0" max="100" value="75" oninput="document.getElementById('initialValText').innerText = this.value + '%'">
+            <span class="slider-val" id="initialValText">75%</span>
+          </div>
+        </div>
+
+        <!-- الخطوة 4: التشوهات المعرفية -->
+        <div class="form-group">
+          <label class="form-label">4. فخ التفكير المعرفي (حدد الأنماط المشوهة):</label>
+          <div class="distortion-grid" id="distortionGrid"></div>
+        </div>
+
+        <!-- الخطوة 5: الفكرة العقلانية البديلة -->
+        <div class="form-group">
+          <label class="form-label">5. الفكرة العقلانية البديلة (المواجهة والرد المنطقي)</label>
+          <textarea id="cbtAlternative" rows="3" placeholder="مثال: هو مشغول جداً اليوم، وتأخره في الرد لا يعني أي شيء سلبي نحوي..."></textarea>
+        </div>
+
+        <!-- إعادة تقييم الشدة -->
+        <div class="form-group">
+          <label class="form-label">الشدة بعد التحدي والتفنيد (كم أصبحت شدة الشعور الآن؟)</label>
+          <div class="slider-container">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">مرتاح</span>
+            <input type="range" id="cbtReassessedIntensity" min="0" max="100" value="30" oninput="document.getElementById('reassessedValText').innerText = this.value + '%'">
+            <span class="slider-val" id="reassessedValText" style="color: var(--success);">30%</span>
+          </div>
+        </div>
+
+        <button class="btn" onclick="saveCbtThought()">
+          <span>✨</span> حفظ وتوثيق الفكرة المفككة
+        </button>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: HISTORY (السجل) -->
+    <div id="screen-history" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">سجل التدوينات والأفكار</h3>
+        <span id="historyCount" style="font-size: 0.85rem; color: var(--text-muted);">0 تدوينة</span>
+      </div>
+
+      <div id="historyList"></div>
+    </div>
+
+    <!-- SCREEN 4: STATS (الإحصائيات الذكية) -->
+    <div id="screen-stats" class="screen">
+      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px;">رؤى وتقدم أفكاري 📊</h3>
+
+      <!-- 4 Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-val" id="statStreak">0</div>
+          <div class="stat-lbl">أيام الالتزام 🔥</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statRelief">0%</div>
+          <div class="stat-lbl">معدل تحسن المشاعر 📉</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statTotal">0</div>
+          <div class="stat-lbl">إجمالي التدوينات 📝</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statAudioCount">0</div>
+          <div class="stat-lbl">تسجيل صوتي مشفر 🎙️</div>
+        </div>
+      </div>
+
+      <!-- Weekly Habit Tracker -->
+      <div class="card">
+        <div class="card-title"><span>🗓️</span> التزام الأيام السبعة الماضية</div>
+        <div class="habit-row" id="habitTrackerRow"></div>
+      </div>
+
+      <!-- Top Distortions -->
+      <div class="card">
+        <div class="card-title"><span>🧩</span> أكثر فخاخ التفكير حضوراً</div>
+        <div id="statsDistortionsList">
+          <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">سجل أفكارك لتظهر أكثر الأنماط تكراراً</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 5: SETTINGS & BACKUP (الأمان والنسخ الاحتياطي) -->
+    <div id="screen-settings" class="screen">
+      <div class="card">
+        <div class="card-title"><span>🛡️</span> الأمان والتشفير العسكري (AES-256)</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+          جميع بياناتك وأصواتك تشفر محلياً على جهازك قبل حفظها. لا يوجد أي خادم خارجي يرى بياناتك أبداً.
+        </p>
+
+        <button class="btn btn-secondary" onclick="changePinPrompt()" style="margin-bottom: 10px;">
+          <span>🔑</span> تغيير رمز الأمان (PIN)
+        </button>
+
+        <button class="btn btn-secondary" onclick="exportEncryptedBackup()" style="margin-bottom: 10px;">
+          <span>📤</span> تصدير نسخة احتياطية مشفرة
+        </button>
+
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()" style="margin-bottom: 10px;">
+          <span>📥</span> استيراد نسخة احتياطية مشفرة
+        </button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importEncryptedBackup(event)">
+
+        <button class="btn btn-danger" onclick="wipeAllData()">
+          <span>⚠️</span> مسح كافة البيانات من هذا المتصفح
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('screen-free-write', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      كتابة حرة
+    </button>
+    <button class="nav-item" onclick="switchTab('screen-cbt', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      تفكيك فكرة
+    </button>
+    <button class="nav-item" onclick="switchTab('screen-history', this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      السجل
+    </button>
+    <button class="nav-item" onclick="switchTab('screen-stats', this)">
+      <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      الإحصائيات
+    </button>
+    <button class="nav-item" onclick="switchTab('screen-settings', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      الأمان
+    </button>
+  </nav>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // --- DISTORTIONS DATA ---
+    const DISTORTIONS = [
+      { id: "all_or_nothing", name: "الكل أو لا شيء", desc: "رؤية الأمور بالأبيض والأسود فقط دون منطقة وسطى" },
+      { id: "catastrophizing", name: "التهويل والكارثية", desc: "تضخيم حجم المشكلة وتوقع أسوأ سيناريو كارثي" },
+      { id: "mind_reading", name: "قراءة الأفكار", desc: "الجزم بمعرفة ما يفكر به الآخرون نحوك بشكل سلبي" },
+      { id: "fortune_telling", name: "التنبؤ السلبي", desc: "التوقع المسبق بأن الأمور ستنتهي بالفشل حتماً" },
+      { id: "emotional_reasoning", name: "الاستدلال العاطفي", desc: "الاعتقاد بأن الشعور بالخوف يعني وجود خطر حقيقي" },
+      { id: "should_statements", name: "عبارات الإلزام (يجب/ينبغي)", desc: "وضع شروط قاسية وصارمة على النفس والآخرين" },
+      { id: "labeling", name: "إطلاق الأحكام الجائرة", desc: "إلصاق صفة الفشل أو العجز على الذات كاملة" },
+      { id: "mental_filter", name: "التصفية السلبية", desc: "التركيز على السلبية الواحدة وتجاهل كل الإيجابيات" },
+      { id: "personalization", name: "الشخصنة واللوم", desc: "تحميل النفس مسؤولية أحداث خارجة عن الإرادة" }
+    ];
+
+    let selectedDistortions = new Set();
+    let currentCryptoKey = null;
+    let currentPinInput = "";
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let currentAudioArrayBuffer = null;
+    let currentAudioBlob = null;
+    let recordTimerInterval = null;
+    let recordSeconds = 0;
+    let isAppLocked = true;
+
+    // --- INITIALIZATION ---
+    window.addEventListener("DOMContentLoaded", () => {
+      renderDistortions();
+      initTheme();
+      checkPinSetup();
+      updateCounters();
+      document.getElementById("fwTimestamp").innerText = new Date().toLocaleDateString("ar-EG", { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    });
+
+    // --- WEB CRYPTO API ENGINE (AES-GCM-256) ---
+    async function deriveKey(pin, salt) {
+      const enc = new TextEncoder();
+      const pinKey = await window.crypto.subtle.importKey(
+        "raw",
+        enc.encode(pin),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+      );
+      return window.crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: salt,
+          iterations: 100000,
+          hash: "SHA-256"
+        },
+        pinKey,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt", "decrypt"]
+      );
+    }
+
+    async function encryptPayload(key, obj) {
+      const enc = new TextEncoder();
+      const encoded = enc.encode(JSON.stringify(obj));
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const ciphertext = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        encoded
+      );
+      return {
+        ciphertext: arrayBufferToBase64(ciphertext),
+        iv: arrayBufferToBase64(iv)
+      };
+    }
+
+    async function decryptPayload(key, ciphertextBase64, ivBase64) {
+      const ciphertext = base64ToArrayBuffer(ciphertextBase64);
+      const iv = base64ToArrayBuffer(ivBase64);
+      const decrypted = await window.crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        key,
+        ciphertext
+      );
+      const dec = new TextDecoder();
+      return JSON.parse(dec.decode(decrypted));
+    }
+
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+
+    function base64ToArrayBuffer(base64) {
+      const binary = window.atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes.buffer;
+    }
+
+    // --- PIN & LOCK MANAGEMENT ---
+    function checkPinSetup() {
+      const salt = localStorage.getItem("freecbt_salt");
+      const verifier = localStorage.getItem("freecbt_verifier");
+      if (!salt || !verifier) {
+        document.getElementById("lockTitle").innerText = "إنشاء رمز أمان جديد 🔒";
+        document.getElementById("lockSubtitle").innerText = "عيّن رمز PIN من 4 أرقام لحماية وتشفير أفكارك وصوتك";
+      } else {
+        document.getElementById("lockTitle").innerText = "خزانة الأفكار المشفرة 🔒";
+        document.getElementById("lockSubtitle").innerText = "أدخل رمز الأمان المكون من 4 أرقام لفتح الخزانة";
+      }
+    }
+
+    function pressPin(num) {
+      if (currentPinInput.length < 4) {
+        currentPinInput += num;
+        updatePinDots();
+        if (currentPinInput.length === 4) {
+          setTimeout(handlePinSubmit, 100);
+        }
+      }
+    }
+
+    function deletePin() {
+      if (currentPinInput.length > 0) {
+        currentPinInput = currentPinInput.slice(0, -1);
+        updatePinDots();
+      }
+    }
+
+    function clearPin() {
+      currentPinInput = "";
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById("dot" + i);
+        if (i <= currentPinInput.length) {
+          dot.classList.add("filled");
+        } else {
+          dot.classList.remove("filled");
+        }
+      }
+    }
+
+    async function handlePinSubmit() {
+      const saltHex = localStorage.getItem("freecbt_salt");
+      const verifier = localStorage.getItem("freecbt_verifier");
+
+      if (!saltHex || !verifier) {
+        // Setup new PIN
+        const salt = window.crypto.getRandomValues(new Uint8Array(16));
+        localStorage.setItem("freecbt_salt", arrayBufferToBase64(salt));
+        const key = await deriveKey(currentPinInput, salt);
+        currentCryptoKey = key;
+        // Create verification token to validate PIN later
+        const checkToken = await encryptPayload(key, { check: "freecbt_valid_pin" });
+        localStorage.setItem("freecbt_verifier", JSON.stringify(checkToken));
+        unlockApp();
+        showToast("تم إنشاء رمز الأمان وتشفير الخزانة بنجاح!");
+      } else {
+        // Verify PIN
+        try {
+          const salt = base64ToArrayBuffer(saltHex);
+          const key = await deriveKey(currentPinInput, salt);
+          const checkToken = JSON.parse(verifier);
+          const res = await decryptPayload(key, checkToken.ciphertext, checkToken.iv);
+          if (res && res.check === "freecbt_valid_pin") {
+            currentCryptoKey = key;
+            unlockApp();
+            showToast("تم فك التشفير وفتح الخزانة");
+          } else {
+            throw new Error("Invalid");
+          }
+        } catch (e) {
+          clearPin();
+          showToast("رمز الأمان غير صحيح! حاول مجدداً");
+        }
+      }
+    }
+
+    function unlockApp() {
+      isAppLocked = false;
+      document.getElementById("lockScreen").style.display = "none";
+      clearPin();
+      loadHistory();
+      calculateStats();
+    }
+
+    function lockApp() {
+      isAppLocked = true;
+      currentCryptoKey = null;
+      document.getElementById("lockScreen").style.display = "flex";
+      checkPinSetup();
+      clearPin();
+    }
+
+    function changePinPrompt() {
+      const confirmChange = confirm("هل أنت متأكد من رغبتك في تغيير رمز الأمان؟ سيتم طلب إدخال الرمز الجديد.");
+      if (confirmChange) {
+        lockApp();
+        localStorage.removeItem("freecbt_salt");
+        localStorage.removeItem("freecbt_verifier");
+        checkPinSetup();
+      }
+    }
+
+    // --- ENCRYPTED AUDIO RECORDING (IN-MEMORY ONLY) ---
+    async function toggleRecording() {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+          };
+          mediaRecorder.onstop = async () => {
+            currentAudioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            currentAudioArrayBuffer = await currentAudioBlob.arrayBuffer();
+            document.getElementById("audioPreview").style.display = "block";
+            document.getElementById("audioDurationText").innerText = `تسجيل صوتي مشفر (${recordSeconds} ثانية)`;
+            clearInterval(recordTimerInterval);
+            document.getElementById("recordTimer").style.display = "none";
+            document.getElementById("recordBtn").classList.remove("recording");
+            document.getElementById("recordStatus").innerText = "تم حفظ الصوت بالذاكرة الحية ومشفر";
+            // Stop tracks to release mic
+            stream.getTracks().forEach(t => t.stop());
+          };
+
+          mediaRecorder.start();
+          recordSeconds = 0;
+          document.getElementById("recordBtn").classList.add("recording");
+          document.getElementById("recordStatus").innerText = "جارِ التسجيل... اضغط للإيقاف";
+          document.getElementById("recordTimer").style.display = "block";
+          recordTimerInterval = setInterval(() => {
+            recordSeconds++;
+            const mins = String(Math.floor(recordSeconds / 60)).padStart(2, "0");
+            const secs = String(recordSeconds % 60).padStart(2, "0");
+            document.getElementById("recordTimer").innerText = `${mins}:${secs}`;
+          }, 1000);
+
+        } catch (err) {
+          alert("تعذر الوصول إلى الميكروفون. يرجى منح الإذن للتسجيل.");
+        }
+      } else if (mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+    }
+
+    function playRecordedAudio() {
+      if (currentAudioBlob) {
+        const url = URL.createObjectURL(currentAudioBlob);
+        const audio = new Audio(url);
+        audio.play();
+        audio.onended = () => URL.revokeObjectURL(url);
+      }
+    }
+
+    function discardAudio() {
+      currentAudioBlob = null;
+      currentAudioArrayBuffer = null;
+      document.getElementById("audioPreview").style.display = "none";
+      document.getElementById("recordStatus").innerText = "اضغط لتسجيل ملاحظة صوتية مشفرة";
+    }
+
+    // --- CBT DISTORTIONS UI ---
+    function renderDistortions() {
+      const container = document.getElementById("distortionGrid");
+      container.innerHTML = "";
+      DISTORTIONS.forEach(d => {
+        const tag = document.createElement("div");
+        tag.className = "distortion-tag";
+        tag.innerText = d.name;
+        tag.title = d.desc;
+        tag.onclick = () => {
+          if (selectedDistortions.has(d.id)) {
+            selectedDistortions.delete(d.id);
+            tag.classList.remove("selected");
+          } else {
+            selectedDistortions.add(d.id);
+            tag.classList.add("selected");
+          }
+        };
+        container.appendChild(tag);
+      });
+    }
+
+    // --- SAVE FREE WRITE ---
+    async function saveFreeWrite() {
+      const title = document.getElementById("fwTitle").value.trim();
+      const body = document.getElementById("fwBody").value.trim();
+
+      if (!body && !currentAudioArrayBuffer) {
+        showToast("يرجى كتابة نص أو تسجيل صوت لحفظ التدوينة");
+        return;
+      }
+
+      let audioPayload = null;
+      if (currentAudioArrayBuffer) {
+        audioPayload = arrayBufferToBase64(currentAudioArrayBuffer);
+      }
+
+      const item = {
+        id: "fw_" + Date.now(),
+        type: "free_write",
+        title: title || "تدوين حر",
+        body: body,
+        audio: audioPayload,
+        createdAt: new Date().toISOString()
+      };
+
+      await saveEncryptedItem(item);
+      document.getElementById("fwTitle").value = "";
+      document.getElementById("fwBody").value = "";
+      discardAudio();
+      updateCounters();
+      showToast("تم حفظ وتشفير التدوينة بنجاح!");
+      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
+    }
+
+    // --- SAVE CBT THOUGHT ---
+    async function saveCbtThought() {
+      const situation = document.getElementById("cbtSituation").value.trim();
+      const automatic = document.getElementById("cbtAutomatic").value.trim();
+      const emotionName = document.getElementById("cbtEmotionName").value.trim() || "شعور عام";
+      const initialIntensity = parseInt(document.getElementById("cbtInitialIntensity").value);
+      const alternative = document.getElementById("cbtAlternative").value.trim();
+      const reassessedIntensity = parseInt(document.getElementById("cbtReassessedIntensity").value);
+
+      if (!automatic && !situation) {
+        showToast("يرجى ملء الفكرة التلقائية أو الموقف على الأقل");
+        return;
+      }
+
+      const item = {
+        id: "cbt_" + Date.now(),
+        type: "cbt",
+        title: automatic || situation,
+        situation,
+        automaticThought: automatic,
+        emotion: { name: emotionName, intensity: initialIntensity, reassessed: reassessedIntensity },
+        distortions: Array.from(selectedDistortions),
+        alternativeThought: alternative,
+        createdAt: new Date().toISOString()
+      };
+
+      await saveEncryptedItem(item);
+      // Reset form
+      document.getElementById("cbtSituation").value = "";
+      document.getElementById("cbtAutomatic").value = "";
+      document.getElementById("cbtEmotionName").value = "";
+      document.getElementById("cbtAlternative").value = "";
+      selectedDistortions.clear();
+      renderDistortions();
+      showToast("تم تفكيك وحفظ الفكرة بنجاح!");
+      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
+    }
+
+    // --- ENCRYPTED STORAGE HELPERS ---
+    async function getEncryptedStore() {
+      const raw = localStorage.getItem("freecbt_items");
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    async function saveEncryptedItem(item) {
+      if (!currentCryptoKey) return;
+      const encrypted = await encryptPayload(currentCryptoKey, item);
+      const store = await getEncryptedStore();
+      store.unshift({
+        id: item.id,
+        createdAt: item.createdAt,
+        type: item.type,
+        encrypted
+      });
+      localStorage.setItem("freecbt_items", JSON.stringify(store));
+      loadHistory();
+      calculateStats();
+    }
+
+    // --- LOAD & RENDER HISTORY ---
+    async function loadHistory() {
+      if (!currentCryptoKey) return;
+      const store = await getEncryptedStore();
+      const listEl = document.getElementById("historyList");
+      document.getElementById("historyCount").innerText = `${store.length} تدوينات`;
+
+      if (store.length === 0) {
+        listEl.innerHTML = `<div class="card" style="text-align: center; color: var(--text-muted); padding: 30px;">
+          <div style="font-size: 32px; margin-bottom: 8px;">📖</div>
+          لا توجد أفكار أو تدوينات مسجلة بعد. ابدأ بكتابة تدوينة حرة أو تفكيك فكرة!
+        </div>`;
+        return;
+      }
+
+      listEl.innerHTML = "";
+      for (const record of store) {
+        try {
+          const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
+          const card = document.createElement("div");
+          card.className = "history-card";
+
+          const dateStr = new Date(item.createdAt).toLocaleDateString("ar-EG", {
+            month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+          });
+
+          let contentHtml = "";
+          if (item.type === "free_write") {
+            contentHtml = `
+              <div class="history-card-header">
+                <span class="history-tag">✏️ تدوين حر</span>
+                <span class="history-time">${dateStr}</span>
+              </div>
+              <h4 style="font-weight: 700; margin-bottom: 6px;">${item.title}</h4>
+              <div class="history-body">${item.body || ""}</div>
+            `;
+          } else {
+            const drop = (item.emotion.intensity - item.emotion.reassessed);
+            contentHtml = `
+              <div class="history-card-header">
+                <span class="history-tag" style="background: rgba(16,185,129,0.1); color: var(--success);">🧠 فكرة CBT</span>
+                <span class="history-time">${dateStr}</span>
+              </div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px;">الموقف: ${item.situation || "غير محدد"}</div>
+              <h4 style="font-weight: 700; margin-bottom: 6px;">💭 "${item.automaticThought}"</h4>
+              <div style="font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-bottom: 6px;">
+                💡 البديل: "${item.alternativeThought || "لم يدون رد بعد"}"
+              </div>
+              <div style="display: flex; gap: 8px; font-size: 0.8rem; margin-top: 6px;">
+                <span style="background: var(--bg); padding: 2px 8px; border-radius: 6px;">${item.emotion.name}: ${item.emotion.intensity}% → ${item.emotion.reassessed}% (تحسن ↓ ${drop}%)</span>
+              </div>
+            `;
+          }
+
+          let audioBtnHtml = "";
+          if (item.audio) {
+            audioBtnHtml = `
+              <button class="icon-btn" onclick="playDecryptedAudio('${item.id}')" title="تشغيل الصوت المشفر" style="width: 32px; height: 32px; margin-left: auto;">
+                ▶️
+              </button>
+            `;
+          }
+
+          card.innerHTML = contentHtml + `
+            <div class="history-actions">
+              ${audioBtnHtml}
+              <button class="icon-btn" onclick="deleteItem('${item.id}')" title="حذف" style="width: 32px; height: 32px; color: var(--danger);">
+                🗑️
+              </button>
+            </div>
+          `;
+
+          listEl.appendChild(card);
+        } catch (e) {
+          console.error("Decryption error for record", e);
+        }
+      }
+    }
+
+    async function playDecryptedAudio(itemId) {
+      if (!currentCryptoKey) return;
+      const store = await getEncryptedStore();
+      const record = store.find(r => r.id === itemId);
+      if (record) {
+        const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
+        if (item.audio) {
+          const buffer = base64ToArrayBuffer(item.audio);
+          const blob = new Blob([buffer], { type: "audio/webm" });
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audio.play();
+          audio.onended = () => URL.revokeObjectURL(url);
+        }
+      }
+    }
+
+    async function deleteItem(itemId) {
+      if (!confirm("هل أنت متأكد من رغبتك في حذف هذه التدوينة؟")) return;
+      let store = await getEncryptedStore();
+      store = store.filter(r => r.id !== itemId);
+      localStorage.setItem("freecbt_items", JSON.stringify(store));
+      loadHistory();
+      calculateStats();
+      showToast("تم الحذف بنجاح");
+    }
+
+    // --- CALCULATE STATS ---
+    async function calculateStats() {
+      if (!currentCryptoKey) return;
+      const store = await getEncryptedStore();
+      let totalRelief = 0;
+      let reliefCount = 0;
+      let audioCount = 0;
+      const distortionCounts = {};
+      const activeDays = new Set();
+
+      for (const record of store) {
+        try {
+          const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
+          if (item.audio) audioCount++;
+          const dKey = item.createdAt.split("T")[0];
+          activeDays.add(dKey);
+
+          if (item.type === "cbt" && item.emotion) {
+            const drop = item.emotion.intensity - item.emotion.reassessed;
+            if (item.emotion.intensity > 0) {
+              const dropPct = Math.round((drop / item.emotion.intensity) * 100);
+              totalRelief += Math.max(0, dropPct);
+              reliefCount++;
+            }
+            if (item.distortions) {
+              item.distortions.forEach(dId => {
+                distortionCounts[dId] = (distortionCounts[dId] || 0) + 1;
+              });
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 1. Streak
+      let streak = 0;
+      let check = new Date();
+      const toKey = d => d.toISOString().split("T")[0];
+      if (!activeDays.has(toKey(check))) {
+        check.setDate(check.getDate() - 1);
+      }
+      while (activeDays.has(toKey(check))) {
+        streak++;
+        check.setDate(check.getDate() - 1);
+      }
+
+      document.getElementById("statStreak").innerText = streak;
+      document.getElementById("statTotal").innerText = store.length;
+      document.getElementById("statAudioCount").innerText = audioCount;
+      document.getElementById("statRelief").innerText = reliefCount > 0 ? `${Math.round(totalRelief / reliefCount)}%` : "0%";
+
+      // Weekly habit dots
+      const habitRow = document.getElementById("habitTrackerRow");
+      habitRow.innerHTML = "";
+      const arDays = ["ح", "ن", "ث", "ر", "خ", "ج", "س"];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = toKey(d);
+        const active = activeDays.has(key);
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "habit-day";
+        dayDiv.innerHTML = `
+          <div class="habit-circle ${active ? 'active' : ''}">${active ? '✓' : ''}</div>
+          <span>${arDays[d.getDay()]}</span>
+        `;
+        habitRow.appendChild(dayDiv);
+      }
+
+      // Top Distortions list
+      const distListEl = document.getElementById("statsDistortionsList");
+      const sortedDist = Object.entries(distortionCounts).sort((a,b) => b[1] - a[1]).slice(0, 4);
+      if (sortedDist.length > 0) {
+        distListEl.innerHTML = "";
+        sortedDist.forEach(([id, cnt]) => {
+          const dObj = DISTORTIONS.find(d => d.id === id);
+          const name = dObj ? dObj.name : id;
+          distListEl.innerHTML += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="font-size: 0.9rem; font-weight: 600;">${name}</span>
+              <span style="background: var(--primary-soft); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;">${cnt} مرات</span>
+            </div>
+          `;
+        });
+      }
+    }
+
+    // --- NAVIGATION & UI TABS ---
+    function switchTab(screenId, navBtn) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      document.getElementById(screenId).classList.add("active");
+      if (navBtn) navBtn.classList.add("active");
+      if (screenId === "screen-history") loadHistory();
+      if (screenId === "screen-stats") calculateStats();
+    }
+
+    function updateCounters() {
+      const text = document.getElementById("fwBody").value;
+      const chars = text.length;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      document.getElementById("fwCounters").innerText = `${words} كلمة | ${chars} حرف`;
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.getAttribute("data-theme") === "dark";
+      const newTheme = isDark ? "light" : "dark";
+      document.body.setAttribute("data-theme", newTheme);
+      localStorage.setItem("freecbt_theme", newTheme);
+      document.getElementById("themeIcon").innerText = newTheme === "dark" ? "☀️" : "🌙";
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("freecbt_theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.body.setAttribute("data-theme", saved);
+      document.getElementById("themeIcon").innerText = saved === "dark" ? "☀️" : "🌙";
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    // --- EXPORT & IMPORT BACKUP ---
+    function exportEncryptedBackup() {
+      const data = {
+        salt: localStorage.getItem("freecbt_salt"),
+        verifier: localStorage.getItem("freecbt_verifier"),
+        items: localStorage.getItem("freecbt_items"),
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `FreeCBT_Backup_${new Date().toISOString().split("T")[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("تم تصدير النسخة الاحتياطية بنجاح!");
+    }
+
+    function importEncryptedBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.salt && data.items) {
+            localStorage.setItem("freecbt_salt", data.salt);
+            if (data.verifier) localStorage.setItem("freecbt_verifier", data.verifier);
+            localStorage.setItem("freecbt_items", data.items);
+            showToast("تم استيراد النسخة الاحتياطية! سيتم قفل التطبيق للتأكيد.");
+            setTimeout(lockApp, 1000);
+          } else {
+            alert("الملف غير صالح");
+          }
+        } catch (err) {
+          alert("خطأ في قراءة ملف النسخة الاحتياطية");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function wipeAllData() {
+      if (confirm("تحذير: هل أنت متأكد تماماً من رغبتك في مسح كافة الأفكار والتسجيلات وإعادة تعيين الـ PIN؟ لا يمكن التراجع عن هذا الإجراء!")) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
