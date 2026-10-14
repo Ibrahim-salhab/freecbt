@@ -144,14 +144,41 @@ function CBTFormItem(
             contentContainerStyle={{ paddingBottom: 20 }}
             keyboardShouldPersistTaps="handled"
           >
-            <Text style={[s.subheader]}>{t("cbt_form.situation_placeholder")}</Text>
+            <Text style={[s.subheader, { marginBottom: 6 }]}>
+              {t("cbt_form.situation_placeholder") || "Situation"}
+            </Text>
             <TextInput
-              style={[s.textInput, { height: 110 }]}
+              style={[s.textInput, { height: 75, marginBottom: 12 }]}
+              placeholder={
+                (model.settings.locale ?? model.deviceLocale) === "ar"
+                  ? "ما هو الموقف أو السياق الذي حدث؟ (مثال: كنت في العمل، مقابلة شخص...)"
+                  : "What was the situation? (e.g. at work, talking to a friend...)"
+              }
+              placeholderTextColor={isDark ? "#888" : "#999"}
+              value={value.situation ?? ""}
+              multiline={true}
+              numberOfLines={2}
+              onChangeText={(v) =>
+                onChange({
+                  ...value,
+                  situation: v,
+                  blockTimestamps: {
+                    ...(value.blockTimestamps ?? {}),
+                    situation: nowIso,
+                  },
+                })
+              }
+            />
+            <Text style={[s.subheader, { marginBottom: 6 }]}>
+              {t("auto_thought") || "Automatic Thought"}
+            </Text>
+            <TextInput
+              style={[s.textInput, { height: 95, marginBottom: 12 }]}
               placeholder={t("cbt_form.auto_thought_placeholder")}
               placeholderTextColor={isDark ? "#888" : "#999"}
               value={value.automaticThought}
               multiline={true}
-              numberOfLines={4}
+              numberOfLines={3}
               onChangeText={(v) =>
                 onChange({
                   ...value,
@@ -196,13 +223,11 @@ function CBTFormItem(
           <>
             <Text style={[s.subheader]}>{t("cog_distortion")}</Text>
             <Pressable
-              style={[s.flexRow]}
+              style={[s.flexRow, s.itemsCenter, s.my2]}
               onPress={() => setShowDetails(!showDetails)}
             >
-              <Text style={[s.text]}>
-                <Switch value={showDetails} onValueChange={setShowDetails} />
-              </Text>
-              <Text style={[s.text, s.alignMiddle, s.mx2, s.hFull]}>
+              <Switch value={showDetails} onValueChange={setShowDetails} />
+              <Text style={[s.text, s.mx2]}>
                 {t("cbt_form.show_details")}
               </Text>
             </Pressable>

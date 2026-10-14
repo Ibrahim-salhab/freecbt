@@ -3,7 +3,13 @@ import { LoadModel, ModelLoadedProps } from "@/src/hooks/use-model";
 import { Action, Model, Thought } from "@/src/model";
 import { ThoughtCard } from "@/src/view/thought-card";
 import { Feather } from "@expo/vector-icons";
-import { Link, Redirect, Unmatched, useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  Redirect,
+  Unmatched,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +19,7 @@ export default function Show() {
 }
 
 function Ready({ model, dispatch, style: s, translate: t }: ModelLoadedProps) {
+  const router = useRouter();
   const res = useThoughtFromParams(model);
   if (res.status === "error") return res.error;
   const thought = res.value;
@@ -22,6 +29,11 @@ function Ready({ model, dispatch, style: s, translate: t }: ModelLoadedProps) {
     (model.settings.theme === null && model.deviceColorScheme === "dark");
   const locale = Model.locale(model);
   const textColor = s.text.color;
+  const isRtl = locale === "ar" || locale === "fa";
+  const backLabel =
+    locale === "ar"
+      ? "العودة للأفكار"
+      : t("cbt_list.deck_view") || "Back to Deck";
 
   return (
     <SafeAreaView style={[s.view]}>
@@ -29,9 +41,13 @@ function Ready({ model, dispatch, style: s, translate: t }: ModelLoadedProps) {
         <View style={styles.topNav}>
           <Link href={Routes.thoughtListV2()} asChild>
             <TouchableOpacity style={styles.backBtn}>
-              <Feather name="arrow-left" size={18} color={textColor} />
+              <Feather
+                name={isRtl ? "arrow-right" : "arrow-left"}
+                size={18}
+                color={textColor}
+              />
               <Text style={[styles.backText, { color: textColor }]}>
-                {t("cbt_list.deck_view") || "Back to Deck"}
+                {backLabel}
               </Text>
             </TouchableOpacity>
           </Link>
@@ -45,7 +61,10 @@ function Ready({ model, dispatch, style: s, translate: t }: ModelLoadedProps) {
             translate={t}
             isDark={isDark}
             locale={locale}
-            onDelete={() => dispatch(Action.deleteThought(thought.uuid))}
+            onDelete={() => {
+              dispatch(Action.deleteThought(thought.uuid));
+              router.replace(Routes.thoughtListV2());
+            }}
           />
         </View>
       </View>

@@ -6,6 +6,8 @@ import { Feather } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React from "react";
 import {
+  Alert,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -37,7 +39,7 @@ export interface ThoughtCardProps {
   showFullDetails?: boolean;
 }
 
-export function ThoughtCard({
+export const ThoughtCard = React.memo(function ThoughtCard({
   thought,
   model,
   style: s,
@@ -81,6 +83,35 @@ export function ThoughtCard({
   const textColor = s.text.color;
 
   const emotions = thought.emotions ?? [];
+  const isFreeNote =
+    distortions.length === 0 &&
+    !thought.challenge &&
+    !thought.alternativeThought;
+
+  const confirmDelete = () => {
+    if (!onDelete) return;
+    const title = locale === "ar" ? "حذف الفكرة" : "Delete Thought";
+    const message =
+      locale === "ar"
+        ? "هل أنت متأكد من رغبتك في حذف هذه الفكرة؟ لا يمكن التراجع عن هذا الإجراء."
+        : "Are you sure you want to delete this thought? This action cannot be undone.";
+    const cancelText = locale === "ar" ? "إلغاء" : "Cancel";
+    const deleteText = locale === "ar" ? "حذف" : "Delete";
+
+    if (Platform.OS === "web") {
+      if (
+        typeof window !== "undefined" &&
+        window.confirm(`${title}\n\n${message}`)
+      ) {
+        onDelete();
+      }
+    } else {
+      Alert.alert(title, message, [
+        { text: cancelText, style: "cancel" },
+        { text: deleteText, style: "destructive", onPress: onDelete },
+      ]);
+    }
+  };
 
   return (
     <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
@@ -95,6 +126,22 @@ export function ThoughtCard({
               year: "numeric",
             })}
           </Text>
+          {isFreeNote && (
+            <View
+              style={[
+                styles.freeNoteBadge,
+                {
+                  backgroundColor: isDark
+                    ? "rgba(84, 109, 229, 0.25)"
+                    : "rgba(84, 109, 229, 0.12)",
+                },
+              ]}
+            >
+              <Text style={styles.freeNoteBadgeText}>
+                ✏️ {t("free_write.badge") || "Free Note"}
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.actionsRow}>
@@ -104,7 +151,8 @@ export function ThoughtCard({
           >
             <TouchableOpacity
               style={[styles.actionBtn, { backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "#f0f2f8" }]}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityLabel={t("cbt_form.edit") || "Edit"}
             >
               <Feather name="edit-2" size={14} color={textColor} />
             </TouchableOpacity>
@@ -112,8 +160,9 @@ export function ThoughtCard({
           {onDelete && (
             <TouchableOpacity
               style={[styles.actionBtn, { backgroundColor: isDark ? "rgba(239,68,68,0.2)" : "#fee2e2" }]}
-              onPress={onDelete}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              onPress={confirmDelete}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityLabel={t("accessibility.delete_thought_button") || "Delete"}
             >
               <Feather name="trash-2" size={14} color="#ef4444" />
             </TouchableOpacity>
@@ -147,28 +196,37 @@ export function ThoughtCard({
         showsVerticalScrollIndicator={true}
         nestedScrollEnabled={true}
       >
-        {/* Situation Block */}
+        {/* Situation / Title Block */}
         {thought.situation ? (
           <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
             <View style={styles.blockHeader}>
               <Text style={[styles.blockTitle, { color: textColor }]}>
-                {t("cbt_form.situation_placeholder") || "Situation"}
+                {isFreeNote
+                  ? (locale === "ar" ? "العنوان" : "Title")
+                  : (t("cbt_form.situation_placeholder") || "Situation")}
               </Text>
               <Text style={[styles.timestamp, { color: timeColor }]}>
                 {situationTime}
               </Text>
             </View>
-            <Text style={[styles.blockContent, { color: textColor }]}>
+            <Text
+              style={[
+                styles.blockContent,
+                { color: textColor, fontWeight: isFreeNote ? "700" : "normal" },
+              ]}
+            >
               {thought.situation}
             </Text>
           </View>
         ) : null}
 
-        {/* Automatic Thought Block */}
+        {/* Automatic Thought / Note Body Block */}
         <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
           <View style={styles.blockHeader}>
             <Text style={[styles.blockTitle, { color: textColor }]}>
-              {t("auto_thought")}
+              {isFreeNote
+                ? (t("free_write.header") || "Note")
+                : t("auto_thought")}
             </Text>
             <Text style={[styles.timestamp, { color: timeColor }]}>
               {autoThoughtTime}
@@ -200,86 +258,90 @@ export function ThoughtCard({
           )}
         </View>
 
-        {/* Cognitive Distortions Block */}
-        <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
-          <View style={styles.blockHeader}>
-            <Text style={[styles.blockTitle, { color: textColor }]}>
-              {t("cog_distortion")}
-            </Text>
-            <Text style={[styles.timestamp, { color: timeColor }]}>
-              {distortionsTime}
-            </Text>
-          </View>
-          {distortions.length > 0 ? (
-            <View style={styles.chipsRow}>
-              {distortions.map((d) => (
-                <View
-                  key={d.slug}
-                  style={[
-                    styles.distortionBadge,
-                    {
-                      backgroundColor: isDark
-                        ? "rgba(255, 255, 255, 0.08)"
-                        : "rgba(0, 0, 0, 0.05)",
-                    },
-                  ]}
-                >
-                  <Text style={[styles.distortionText, { color: textColor }]}>
-                    {Distortion.emoji(d)} {t(d.labelKey)}
-                  </Text>
+        {!isFreeNote && (
+          <>
+            {/* Cognitive Distortions Block */}
+            <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
+              <View style={styles.blockHeader}>
+                <Text style={[styles.blockTitle, { color: textColor }]}>
+                  {t("cog_distortion")}
+                </Text>
+                <Text style={[styles.timestamp, { color: timeColor }]}>
+                  {distortionsTime}
+                </Text>
+              </View>
+              {distortions.length > 0 ? (
+                <View style={styles.chipsRow}>
+                  {distortions.map((d) => (
+                    <View
+                      key={d.slug}
+                      style={[
+                        styles.distortionBadge,
+                        {
+                          backgroundColor: isDark
+                            ? "rgba(255, 255, 255, 0.08)"
+                            : "rgba(0, 0, 0, 0.05)",
+                        },
+                      ]}
+                    >
+                      <Text style={[styles.distortionText, { color: textColor }]}>
+                        {Distortion.emoji(d)} {t(d.labelKey)}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
-              ))}
+              ) : (
+                <Text style={[styles.blockContent, { color: timeColor }]}>—</Text>
+              )}
             </View>
-          ) : (
-            <Text style={[styles.blockContent, { color: timeColor }]}>—</Text>
-          )}
-        </View>
 
-        {/* Challenge Block */}
-        <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
-          <View style={styles.blockHeader}>
-            <Text style={[styles.blockTitle, { color: textColor }]}>
-              {t("challenge")}
-            </Text>
-            <Text style={[styles.timestamp, { color: timeColor }]}>
-              {challengeTime}
-            </Text>
-          </View>
-          <Text style={[styles.blockContent, { color: textColor }]}>
-            {thought.challenge || "—"}
-          </Text>
-        </View>
-
-        {/* Alternative Thought Block */}
-        <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
-          <View style={styles.blockHeader}>
-            <Text style={[styles.blockTitle, { color: textColor }]}>
-              {t("alt_thought")}
-            </Text>
-            <Text style={[styles.timestamp, { color: timeColor }]}>
-              {altThoughtTime}
-            </Text>
-          </View>
-          <Text style={[styles.blockContent, { color: textColor }]}>
-            {thought.alternativeThought || "—"}
-          </Text>
-          {emotions.some((e) => e.reassessedIntensity !== undefined) && (
-            <View style={styles.chipsRow}>
-              {emotions.map((em, idx) => (
-                <EmotionDeltaBadge
-                  key={`alt-${em.name}-${idx}`}
-                  emotion={em}
-                  isDark={isDark}
-                  compact={false}
-                />
-              ))}
+            {/* Challenge Block */}
+            <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
+              <View style={styles.blockHeader}>
+                <Text style={[styles.blockTitle, { color: textColor }]}>
+                  {t("challenge")}
+                </Text>
+                <Text style={[styles.timestamp, { color: timeColor }]}>
+                  {challengeTime}
+                </Text>
+              </View>
+              <Text style={[styles.blockContent, { color: textColor }]}>
+                {thought.challenge || "—"}
+              </Text>
             </View>
-          )}
-        </View>
+
+            {/* Alternative Thought Block */}
+            <View style={[styles.block, { backgroundColor: blockBg, borderColor }]}>
+              <View style={styles.blockHeader}>
+                <Text style={[styles.blockTitle, { color: textColor }]}>
+                  {t("alt_thought")}
+                </Text>
+                <Text style={[styles.timestamp, { color: timeColor }]}>
+                  {altThoughtTime}
+                </Text>
+              </View>
+              <Text style={[styles.blockContent, { color: textColor }]}>
+                {thought.alternativeThought || "—"}
+              </Text>
+              {emotions.some((e) => e.reassessedIntensity !== undefined) && (
+                <View style={styles.chipsRow}>
+                  {emotions.map((em, idx) => (
+                    <EmotionDeltaBadge
+                      key={`alt-${em.name}-${idx}`}
+                      emotion={em}
+                      isDark={isDark}
+                      compact={false}
+                    />
+                  ))}
+                </View>
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {
@@ -389,5 +451,16 @@ const styles = StyleSheet.create({
   distortionText: {
     fontSize: 12,
     fontWeight: "500",
+  },
+  freeNoteBadge: {
+    marginLeft: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  freeNoteBadgeText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#546de5",
   },
 });

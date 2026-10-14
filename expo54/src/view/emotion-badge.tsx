@@ -8,7 +8,7 @@ export interface EmotionDeltaBadgeProps {
   isDark?: boolean;
 }
 
-export function EmotionDeltaBadge({
+export const EmotionDeltaBadge = React.memo(function EmotionDeltaBadge({
   emotion,
   compact = false,
   isDark = false,
@@ -72,7 +72,7 @@ export function EmotionDeltaBadge({
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   badge: {

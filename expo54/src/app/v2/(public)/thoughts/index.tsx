@@ -8,6 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -65,6 +66,35 @@ function Ready(props: ModelLoadedProps) {
   const textColor = s.text.color;
   const borderColor = isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
   const activeBtnBg = "#546de5";
+  const isRtl = locale === "ar" || locale === "fa";
+
+  const handleDelete = (uuid: string) => {
+    const title = locale === "ar" ? "حذف الفكرة" : "Delete Thought";
+    const message =
+      locale === "ar"
+        ? "هل أنت متأكد من رغبتك في حذف هذه الفكرة؟ لا يمكن التراجع عن هذا الإجراء."
+        : "Are you sure you want to delete this thought? This action cannot be undone.";
+    const cancelText = locale === "ar" ? "إلغاء" : "Cancel";
+    const deleteText = locale === "ar" ? "حذف" : "Delete";
+
+    if (Platform.OS === "web") {
+      if (
+        typeof window !== "undefined" &&
+        window.confirm(`${title}\n\n${message}`)
+      ) {
+        dispatch(Action.deleteThought(uuid));
+      }
+    } else {
+      Alert.alert(title, message, [
+        { text: cancelText, style: "cancel" },
+        {
+          text: deleteText,
+          style: "destructive",
+          onPress: () => dispatch(Action.deleteThought(uuid)),
+        },
+      ]);
+    }
+  };
 
   if (allThoughts.length === 0) {
     return (
@@ -79,13 +109,22 @@ function Ready(props: ModelLoadedProps) {
           <Text style={[s.subheader, { textAlign: "center" }]}>
             {t("cbt_list.empty")}
           </Text>
-          <Link href={Routes.thoughtCreateV2()} asChild>
-            <TouchableOpacity style={[s.button, s.bgSelected, s.mt4]}>
-              <Text style={[s.selectedText]}>
-                + {t("accessibility.new_thought_button")}
-              </Text>
-            </TouchableOpacity>
-          </Link>
+          <View style={[s.flexRow, s.my4, { gap: 10, flexWrap: "wrap", justifyContent: "center" }]}>
+            <Link href={Routes.thoughtCreateV2()} asChild>
+              <TouchableOpacity style={[s.button, s.bgSelected]}>
+                <Text style={[s.selectedText]}>
+                  + {t("accessibility.new_thought_button")}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+            <Link href={Routes.freeWriteV2()} asChild>
+              <TouchableOpacity style={[s.button, { backgroundColor: isDark ? "#374151" : "#e0e7ff" }]}>
+                <Text style={{ color: isDark ? "#93c5fd" : "#4338ca", fontWeight: "700" }}>
+                  ✏️ {t("free_write.header") || "Free Writing"}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -108,7 +147,11 @@ function Ready(props: ModelLoadedProps) {
                 onPress={() => carouselRef.current?.prev()}
                 accessibilityLabel={t("cbt_list.prev") || "Previous"}
               >
-                <Feather name="chevron-left" size={18} color={textColor} />
+                <Feather
+                  name={isRtl ? "chevron-right" : "chevron-left"}
+                  size={18}
+                  color={textColor}
+                />
               </TouchableOpacity>
 
               <Text style={[styles.counterText, { color: textColor }]}>
@@ -130,7 +173,11 @@ function Ready(props: ModelLoadedProps) {
                 onPress={() => carouselRef.current?.next()}
                 accessibilityLabel={t("cbt_list.next") || "Next"}
               >
-                <Feather name="chevron-right" size={18} color={textColor} />
+                <Feather
+                  name={isRtl ? "chevron-left" : "chevron-right"}
+                  size={18}
+                  color={textColor}
+                />
               </TouchableOpacity>
             </View>
           ) : (
@@ -218,7 +265,7 @@ function Ready(props: ModelLoadedProps) {
                     translate={t}
                     isDark={isDark}
                     locale={locale}
-                    onDelete={() => dispatch(Action.deleteThought(thought.uuid))}
+                    onDelete={() => handleDelete(thought.uuid)}
                   />
                 </View>
               )}
@@ -297,7 +344,9 @@ function Ready(props: ModelLoadedProps) {
 
                     <TouchableOpacity
                       style={styles.listDeleteBtn}
-                      onPress={() => dispatch(Action.deleteThought(thought.uuid))}
+                      onPress={() => handleDelete(thought.uuid)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      accessibilityLabel={t("accessibility.delete_thought_button") || "Delete"}
                     >
                       <Feather name="trash" size={16} color="#ef4444" />
                     </TouchableOpacity>
@@ -307,6 +356,44 @@ function Ready(props: ModelLoadedProps) {
             ))}
           </ScrollView>
         )}
+
+        {/* Dual Floating Action Buttons: Free Write & New Thought */}
+        <View
+          style={[
+            styles.fabContainer,
+            isRtl ? { left: 20 } : { right: 20 },
+          ]}
+        >
+          <Link href={Routes.freeWriteV2()} asChild>
+            <TouchableOpacity
+              style={[
+                styles.fabSecondaryButton,
+                { backgroundColor: isDark ? "#374151" : "#e0e7ff" },
+              ]}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              accessibilityLabel={t("free_write.header") || "Free Writing"}
+            >
+              <Feather
+                name="edit-3"
+                size={20}
+                color={isDark ? "#93c5fd" : "#4338ca"}
+              />
+            </TouchableOpacity>
+          </Link>
+
+          <Link href={Routes.thoughtCreateV2()} asChild>
+            <TouchableOpacity
+              style={[
+                styles.fabButton,
+                { backgroundColor: activeBtnBg },
+              ]}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              accessibilityLabel={t("accessibility.new_thought_button") || "New Thought"}
+            >
+              <Feather name="plus" size={26} color="#fff" />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -336,8 +423,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   arrowBtn: {
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
     borderRadius: 8,
     borderWidth: 1,
     justifyContent: "center",
@@ -410,5 +497,37 @@ const styles = StyleSheet.create({
   listDeleteBtn: {
     padding: 8,
     borderRadius: 8,
+  },
+  fabContainer: {
+    position: "absolute",
+    bottom: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    zIndex: 99,
+  },
+  fabButton: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  fabSecondaryButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
 });

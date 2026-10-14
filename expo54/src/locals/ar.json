@@ -204,6 +204,16 @@
     "alt_thought_placeholder": "ما الفكرة الأكثر توازناً وواقعية التي يمكنني التفكير بها؟",
     "show_details": "عرض الشرح المفصل"
   },
+  "free_write": {
+    "header": "كتابة حرة",
+    "title_placeholder": "عنوان التدوينة (اختياري)...",
+    "body_placeholder": "اكتب بحرية دون أي قيود — أفكارك، مشاعرك، ملاحظاتك...",
+    "save": "حفظ التدوينة",
+    "words": "كلمة",
+    "chars": "حرف",
+    "badge": "تدوين حر",
+    "saved_success": "تم الحفظ بنجاح!"
+  },
   "explanation_screen": {
     "header": "FreeCBT.",
     "intro": "مقدمة"

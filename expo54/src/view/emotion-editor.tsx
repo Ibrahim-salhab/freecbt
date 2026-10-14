@@ -1,5 +1,5 @@
 import { Emotion, Thought, getEmotionSuggestions } from "@/src/model/thought";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
@@ -30,13 +30,17 @@ export function EmotionEditor({
   const [emotionName, setEmotionName] = useState("");
   const [currentIntensity, setCurrentIntensity] = useState(70);
 
-  const activeNames = emotions.map((e) => e.name);
-  const suggestions = getEmotionSuggestions(
-    allThoughts,
-    [],
-    emotionName,
-    activeNames
-  ).slice(0, 8);
+  const activeNames = useMemo(() => emotions.map((e) => e.name), [emotions]);
+  const suggestions = useMemo(
+    () =>
+      getEmotionSuggestions(
+        allThoughts,
+        [],
+        emotionName,
+        activeNames
+      ).slice(0, 8),
+    [allThoughts, emotionName, activeNames]
+  );
 
   const handleAddEmotion = (nameToAdd?: string) => {
     const finalName = (nameToAdd || emotionName).trim();
@@ -99,7 +103,8 @@ export function EmotionEditor({
                 <TouchableOpacity
                   onPress={() => handleRemove(index)}
                   style={styles.removeBtn}
-                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                  accessibilityLabel="Remove emotion"
                 >
                   <Text style={[styles.removeBtnText, { color: textColor }]}>
                     ✕

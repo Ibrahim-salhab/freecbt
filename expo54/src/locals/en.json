@@ -206,6 +206,16 @@
     "alt_thought_placeholder": "What could we think instead?",
     "show_details": "Show detailed descriptions"
   },
+  "free_write": {
+    "header": "Free Writing",
+    "title_placeholder": "Title (optional)...",
+    "body_placeholder": "Write freely without constraints — your thoughts, feelings, or notes...",
+    "save": "Save Entry",
+    "words": "words",
+    "chars": "characters",
+    "badge": "Free Note",
+    "saved_success": "Saved successfully!"
+  },
   "explanation_screen": {
     "header": "FreeCBT.",
     "intro": "Intro"
