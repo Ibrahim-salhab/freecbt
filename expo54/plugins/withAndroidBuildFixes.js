@@ -16,21 +16,11 @@ const withAndroidBuildFixes = (config) => {
     return config;
   });
 
-  // 2. Root build.gradle: disable lintVital across all subprojects
+  // 2. Root build.gradle: disable lintVital across all subprojects lazily without afterEvaluate
   config = withProjectBuildGradle(config, (config) => {
     const disableLintBlock = `
 // Added to disable lintVital across all subprojects and avoid OOM / lint failures
 subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            project.android {
-                lint {
-                    checkReleaseBuilds false
-                    abortOnError false
-                }
-            }
-        }
-    }
     tasks.configureEach { task ->
         if (task.name.contains("lintVital")) {
             task.enabled = false
