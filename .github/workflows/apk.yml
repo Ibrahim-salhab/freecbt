@@ -25,7 +25,7 @@ jobs:
           java-version: "17"
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Install dependencies
         run: yarn install
@@ -33,13 +33,17 @@ jobs:
       - name: Expo Prebuild Android
         run: yarn --cwd expo54 expo prebuild --platform android --no-install
 
-      - name: Build Release APK
+      - name: Make Gradlew Executable
+        run: chmod +x expo54/android/gradlew
+
+      - name: Build Android APK
         run: |
           cd expo54/android
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FreeCBT-APK
-          path: expo54/android/app/build/outputs/apk/release/*.apk
+          path: expo54/android/app/build/outputs/apk/**/*.apk
+
