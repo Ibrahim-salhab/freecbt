@@ -16,18 +16,19 @@
       --primary-soft: rgba(79, 70, 229, 0.1);
       --bg: #f8fafc;
       --card-bg: #ffffff;
+      --input-bg: #f1f5f9;
       --text: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
-      --border-focus: #818cf8;
+      --border-focus: #6366f1;
       --danger: #ef4444;
       --danger-soft: rgba(239, 68, 68, 0.1);
       --success: #10b981;
       --success-soft: rgba(16, 185, 129, 0.1);
       --warning: #f59e0b;
       --radius: 16px;
-      --radius-sm: 8px;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --radius-sm: 10px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
       --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
       --font: system-ui, -apple-system, "Segoe UI", Roboto, "Tajawal", "Cairo", sans-serif;
     }
@@ -35,6 +36,7 @@
     [data-theme="dark"] {
       --bg: #090d16;
       --card-bg: #131b2e;
+      --input-bg: #0f172a;
       --text: #f1f5f9;
       --text-muted: #94a3b8;
       --border: #1e293b;
@@ -101,7 +103,7 @@
     }
 
     .icon-btn {
-      background: transparent;
+      background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
       width: 38px;
@@ -118,6 +120,14 @@
       background: var(--primary-soft);
       border-color: var(--primary);
       color: var(--primary);
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
     }
 
     /* Main Container */
@@ -206,44 +216,45 @@
       gap: 8px;
     }
 
-    /* Inputs */
+    /* Improved Modern Inputs */
     .form-group {
       margin-bottom: 16px;
     }
 
     .form-label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
     }
 
     input[type="text"], input[type="password"], textarea, select {
       width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      font-size: 0.95rem;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 0.96rem;
       color: var(--text);
       font-family: inherit;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
 
     input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--primary-soft);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3.5px var(--primary-soft);
     }
 
     textarea {
       resize: vertical;
-      min-height: 120px;
+      min-height: 100px;
       line-height: 1.6;
     }
 
-    /* Fast O(1) writing text area */
     .free-textarea {
       min-height: 220px;
       font-size: 1.05rem;
@@ -259,9 +270,9 @@
       background: var(--primary);
       color: #fff;
       border: none;
-      border-radius: var(--radius-sm);
-      padding: 12px 20px;
-      font-size: 0.95rem;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 0.96rem;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
@@ -296,20 +307,232 @@
       color: #fff;
     }
 
+    /* Multi-Emotion List */
+    .emotion-row {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .emotion-row-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .emotion-remove-btn {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+
+    .emotion-remove-btn:hover {
+      background: var(--danger-soft);
+    }
+
+    .autocomplete-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .emotion-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .emotion-chip:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Slider styling */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .slider-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--primary);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Distortions List (with Explanation and Real-World Example) */
+    .distortion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .distortion-item {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .distortion-item:hover {
+      border-color: var(--border-focus);
+    }
+
+    .distortion-item.selected {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+    }
+
+    .distortion-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .distortion-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .distortion-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      background: var(--card-bg);
+    }
+
+    .distortion-item.selected .distortion-checkbox {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .distortion-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 4px;
+    }
+
+    .distortion-example {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      opacity: 0.88;
+      font-style: italic;
+      background: rgba(128, 128, 128, 0.06);
+      padding: 4px 8px;
+      border-radius: 6px;
+      border-right: 2.5px solid var(--primary);
+      margin-top: 4px;
+    }
+
+    /* Waveform Audio Player Component */
+    .audio-player-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .audio-player-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .waveform-container {
+      flex: 1;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      position: relative;
+      padding: 2px 0;
+    }
+
+    .waveform-bar {
+      flex: 1;
+      background: var(--border);
+      border-radius: 2px;
+      min-width: 2.5px;
+      transition: background 0.1s;
+    }
+
+    .waveform-bar.played {
+      background: var(--primary);
+    }
+
+    .audio-time {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 76px;
+      text-align: center;
+    }
+
     /* Audio Recording Section */
     .recorder-box {
       border: 2px dashed var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 16px;
       text-align: center;
       margin-bottom: 16px;
-      background: var(--bg);
+      background: var(--input-bg);
       position: relative;
     }
 
     .record-btn {
-      width: 64px;
-      height: 64px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       background: var(--danger);
       color: #fff;
@@ -318,7 +541,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
@@ -337,68 +560,6 @@
       font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 600;
-    }
-
-    .audio-preview {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 8px 16px;
-      margin-top: 12px;
-    }
-
-    /* Distortions Grid */
-    .distortion-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .distortion-tag {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      border-radius: var(--radius-sm);
-      padding: 8px 10px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      font-weight: 500;
-    }
-
-    .distortion-tag.selected {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-      font-weight: 700;
-    }
-
-    /* Slider */
-    .slider-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .slider-val {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--primary);
-      min-width: 48px;
-      text-align: center;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--border);
-      outline: none;
-      cursor: pointer;
     }
 
     /* Lock Screen Overlay */
@@ -463,13 +624,13 @@
       background: var(--primary-soft);
     }
 
-    /* List items in History */
+    /* History Cards */
     .history-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow);
       position: relative;
     }
@@ -478,7 +639,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .history-tag {
@@ -495,11 +656,51 @@
       color: var(--text-muted);
     }
 
+    .history-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
     .history-body {
       font-size: 0.95rem;
       line-height: 1.6;
       margin-bottom: 10px;
       white-space: pre-wrap;
+    }
+
+    .history-emotions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0;
+    }
+
+    .badge-relief-good {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-relief-neutral {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(100, 116, 139, 0.1);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
     }
 
     .history-actions {
@@ -509,6 +710,7 @@
       gap: 8px;
       border-top: 1px solid var(--border);
       padding-top: 10px;
+      margin-top: 8px;
     }
 
     /* Stats Grid */
@@ -575,7 +777,7 @@
       color: #fff;
     }
 
-    /* Notification toast */
+    /* Toast */
     .toast {
       position: fixed;
       bottom: 80px;
@@ -644,7 +846,7 @@
         <span id="themeIcon">🌙</span>
       </button>
       <button class="icon-btn" onclick="lockApp()" title="قفل التطبيق">
-        🔒
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </button>
     </div>
   </header>
@@ -664,7 +866,7 @@
         </div>
 
         <div class="form-group">
-          <textarea id="fwBody" class="free-textarea" placeholder="اكتب كل ما يجول في خاطرك بحرية تامة دون قيود... كتابتك تستجيب فوراً ومحمية بتشفير عسكري." oninput="updateCounters()"></textarea>
+          <textarea id="fwBody" class="free-textarea" placeholder="اكتب كل ما يجول في خاطرك بحرية تامة دون أي قيود..." oninput="updateCounters()"></textarea>
           <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">
             <span id="fwCounters">0 كلمة | 0 حرف</span>
             <span id="fwTimestamp"></span>
@@ -673,23 +875,17 @@
 
         <!-- Encrypted Audio Section -->
         <div class="recorder-box">
-          <button id="recordBtn" class="record-btn" onclick="toggleRecording()" title="تسجيل صوتي مشفر">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <button id="recordBtn" class="record-btn" onclick="toggleRecording('fw')" title="تسجيل صوتي مشفر">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
           </button>
           <div id="recordStatus" class="record-status">اضغط لتسجيل ملاحظة صوتية مشفرة</div>
           <div id="recordTimer" style="font-size: 1.1rem; font-weight: 700; color: var(--danger); display: none; margin-top: 4px;">00:00</div>
           
-          <div id="audioPreview" style="display: none; margin-top: 12px;">
-            <div class="audio-preview">
-              <button class="icon-btn" onclick="playRecordedAudio()" style="width: 32px; height: 32px;" title="تشغيل">▶️</button>
-              <span id="audioDurationText" style="font-size: 0.85rem; font-weight: 600;">ملاحظة صوتية جاهزة</span>
-              <button class="icon-btn" onclick="discardAudio()" style="width: 32px; height: 32px; color: var(--danger);" title="حذف">🗑️</button>
-            </div>
-          </div>
+          <div id="audioPreview" style="display: none; margin-top: 12px;"></div>
         </div>
 
         <button class="btn" onclick="saveFreeWrite()">
-          <span>💾</span> حفظ التدوينة المشفرة
+          <span>💾</span> حفظ
         </button>
       </div>
     </div>
@@ -713,21 +909,22 @@
           <textarea id="cbtAutomatic" rows="2" placeholder="مثال: من المؤكد أنه غاضب مني وسأُفصل من العمل..."></textarea>
         </div>
 
-        <!-- الخطوة 3: المشاعر وشدتها الأولية -->
+        <!-- الخطوة 3: المشاعر (تعدد المشاعر مع إكمال تلقائي) -->
         <div class="form-group">
-          <label class="form-label">3. المشاعر وشدتها الأولية</label>
-          <input type="text" id="cbtEmotionName" placeholder="اسم الشعور (قلق، خوف، إحباط، حزن)..." style="margin-bottom: 8px;">
-          <div class="slider-container">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">خفيف</span>
-            <input type="range" id="cbtInitialIntensity" min="0" max="100" value="75" oninput="document.getElementById('initialValText').innerText = this.value + '%'">
-            <span class="slider-val" id="initialValText">75%</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" style="margin-bottom: 0;">3. المشاعر وشدتها الأولية (0 - 100%)</label>
+            <button type="button" class="btn btn-secondary" onclick="addEmotionRow()" style="width: auto; padding: 5px 12px; font-size: 0.8rem;">
+              + إضافة شعور آخر
+            </button>
           </div>
+
+          <div id="emotionsContainer"></div>
         </div>
 
-        <!-- الخطوة 4: التشوهات المعرفية -->
+        <!-- الخطوة 4: التشوهات المعرفية الأصلية مع الأمثلة -->
         <div class="form-group">
-          <label class="form-label">4. فخ التفكير المعرفي (حدد الأنماط المشوهة):</label>
-          <div class="distortion-grid" id="distortionGrid"></div>
+          <label class="form-label">4. فخ التفكير المعرفي (حدد الأنماط المشوهة من الأمثلة):</label>
+          <div class="distortion-list" id="distortionList"></div>
         </div>
 
         <!-- الخطوة 5: الفكرة العقلانية البديلة -->
@@ -736,18 +933,26 @@
           <textarea id="cbtAlternative" rows="3" placeholder="مثال: هو مشغول جداً اليوم، وتأخره في الرد لا يعني أي شيء سلبي نحوي..."></textarea>
         </div>
 
-        <!-- إعادة تقييم الشدة -->
+        <!-- الخطوة 6: إعادة تقييم المشاعر (تبدأ من قيمتها الأولية) -->
         <div class="form-group">
-          <label class="form-label">الشدة بعد التحدي والتفنيد (كم أصبحت شدة الشعور الآن؟)</label>
-          <div class="slider-container">
-            <span style="font-size: 0.8rem; color: var(--text-muted);">مرتاح</span>
-            <input type="range" id="cbtReassessedIntensity" min="0" max="100" value="30" oninput="document.getElementById('reassessedValText').innerText = this.value + '%'">
-            <span class="slider-val" id="reassessedValText" style="color: var(--success);">30%</span>
+          <label class="form-label">الشدة بعد التحدي والتفنيد (كم أصبحت شدة كل شعور؟)</label>
+          <div id="reassessmentContainer" style="background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px;"></div>
+        </div>
+
+        <!-- تسجيل صوتي اختياري للفكرة -->
+        <div class="form-group">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <label class="form-label" style="margin-bottom: 0;">تسجيل صوتي مشفر للفكرة (اختياري)</label>
+            <button id="cbtRecordBtn" type="button" class="icon-btn" onclick="toggleRecording('cbt')" style="width: 34px; height: 34px; color: var(--danger);" title="تسجيل صوت للفكرة">
+              <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
           </div>
+          <div id="cbtRecordStatus" style="font-size: 0.8rem; color: var(--text-muted);">انقر على المايك لتسجيل صوت مرافق للفكرة</div>
+          <div id="cbtAudioPreview" style="display: none; margin-top: 8px;"></div>
         </div>
 
         <button class="btn" onclick="saveCbtThought()">
-          <span>✨</span> حفظ وتوثيق الفكرة المفككة
+          <span>💾</span> حفظ
         </button>
       </div>
     </div>
@@ -806,7 +1011,7 @@
       <div class="card">
         <div class="card-title"><span>🛡️</span> الأمان والتشفير العسكري (AES-256)</div>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
-          جميع بياناتك وأصواتك تشفر محلياً على جهازك قبل حفظها. لا يوجد أي خادم خارجي يرى بياناتك أبداً.
+          جميع بياناتك وأصواتك تشفر محلياً على جهازك قبل حفظها، وتخزن في قاعدة بيانات IndexedDB المعزولة. لا يوجد أي خادم خارجي يرى بياناتك أبداً.
         </p>
 
         <button class="btn btn-secondary" onclick="changePinPrompt()" style="margin-bottom: 10px;">
@@ -858,33 +1063,112 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // --- DISTORTIONS DATA ---
+    // --- 11 AUTHENTIC COGNITIVE DISTORTIONS (FROM ORIGINAL FREECBT) ---
     const DISTORTIONS = [
-      { id: "all_or_nothing", name: "الكل أو لا شيء", desc: "رؤية الأمور بالأبيض والأسود فقط دون منطقة وسطى" },
-      { id: "catastrophizing", name: "التهويل والكارثية", desc: "تضخيم حجم المشكلة وتوقع أسوأ سيناريو كارثي" },
-      { id: "mind_reading", name: "قراءة الأفكار", desc: "الجزم بمعرفة ما يفكر به الآخرون نحوك بشكل سلبي" },
-      { id: "fortune_telling", name: "التنبؤ السلبي", desc: "التوقع المسبق بأن الأمور ستنتهي بالفشل حتماً" },
-      { id: "emotional_reasoning", name: "الاستدلال العاطفي", desc: "الاعتقاد بأن الشعور بالخوف يعني وجود خطر حقيقي" },
-      { id: "should_statements", name: "عبارات الإلزام (يجب/ينبغي)", desc: "وضع شروط قاسية وصارمة على النفس والآخرين" },
-      { id: "labeling", name: "إطلاق الأحكام الجائرة", desc: "إلصاق صفة الفشل أو العجز على الذات كاملة" },
-      { id: "mental_filter", name: "التصفية السلبية", desc: "التركيز على السلبية الواحدة وتجاهل كل الإيجابيات" },
-      { id: "personalization", name: "الشخصنة واللوم", desc: "تحميل النفس مسؤولية أحداث خارجة عن الإرادة" }
+      {
+        id: "all_or_nothing",
+        name: "التفكير بالكل أو لا شيء 0️⃣🔟",
+        desc: "رؤية الأمور بإفراط بلونين فقط دون أي منطقة وسطى؛ إما نجاح باهر أو فشل ذريع.",
+        example: "مثال: أخفقت في المقابلة الوظيفية، لن يقبلني أحد في أي عمل أبداً."
+      },
+      {
+        id: "catastrophizing",
+        name: "التفكير الكارثي (التهويل) 💥",
+        desc: "تضخيم المشكلات البسيطة وتحويلها في خيالك إلى كوارث محتومة لا يمكن تجاوزها.",
+        example: "مثال: أشعر ببعض التوتر وخفقان في القلب، لا بد أنها أزمة قلبية."
+      },
+      {
+        id: "emotional_reasoning",
+        name: "الاستدلال العاطفي ❤️",
+        desc: "«أشعر بهذا، إذن هو حقيقة حتمية.» الاعتقاد بأن شيئاً خطير لمجرد أنك تشعر بالخوف منه.",
+        example: "مثال: أشعر بالذنب والضيق، لا بد أنني ارتكبت أمراً فظيعاً."
+      },
+      {
+        id: "fortune_telling",
+        name: "التنبؤ السلبي بالمستقبل 🔮",
+        desc: "الجزم بمعرفة ما سيقع في المستقبل على نحو سلبي وتجاهل كل ما يناقضه.",
+        example: "مثال: إذا تقدمت لهذه الدورة سأرسب حتماً ولن أنجح."
+      },
+      {
+        id: "mind_reading",
+        name: "قراءة الأفكار 💭",
+        desc: "افتراض أنك تعلم ما يدور في عقول الآخرين تجاهك وأنهم يحكمون عليك سلباً.",
+        example: "مثال: لم يبتسم زميلي حين حييته، أراهن أنه غاضب مني أو يكرهني."
+      },
+      {
+        id: "should_statements",
+        name: "عبارات الإلزام («يجب» و«ينبغي») 📜",
+        desc: "وضع قواعد صارمة ومطالب غير واقعية على النفس أو الآخرين تثقل كاهلك بالذنب.",
+        example: "مثال: أنا شخص ناضج، لا ينبغي أن تراودني أي مخاوف أو تردد."
+      },
+      {
+        id: "labeling",
+        name: "إطلاق الأحكام والوسم 🏷️",
+        desc: "اختزال شخصيتك كاملة في تصنيف أو وصف سلبي واحد بناءً على موقف عابر.",
+        example: "مثال: رسبت في اختبار واحد، إذن أنا فاشل وغبي."
+      },
+      {
+        id: "magnification_of_negative",
+        name: "تضخيم السلبيات (الترشيح السلبي) 🔍",
+        desc: "التركيز الحصري على الجوانب السلبية العابرة وتجاهل كل الإيجابيات المحيطة بها.",
+        example: "مثال: التزمت بالأكل الصحي طوال الأسبوع، لكنني نسيت تمريناً واحداً، لقد أفسدت كل شيء."
+      },
+      {
+        id: "minimization_of_positive",
+        name: "التقليل من الإيجابيات 👎",
+        desc: "تهميش النجاحات والإنجازات وعدّها مجرد صدفة أو غير مهمة.",
+        example: "مثال: أثنى كثيرون على عملي، لكنهم يجاملون فقط ولا يعنون ذلك."
+      },
+      {
+        id: "self_blaming",
+        name: "لوم الذات والمسؤولية المفرطة 🪞",
+        desc: "تحميل نفسك مسؤولية أحداث ومواقف خارجة تماماً عن إرادتك وسيطرتك.",
+        example: "مثال: تأخر صديقي عن اللقاء، لابد أنني اخترت وقتاً غير مناسب وأزعجته."
+      },
+      {
+        id: "other_blaming",
+        name: "إلقاء اللوم على الآخرين 👉",
+        desc: "افتراض أن كل موقف سلبي هو بالضرورة خطأ طرف آخر وإهدار الطاقة في الغضب.",
+        example: "مثال: ذلك السائق يتباطأ في الشارع، هو يتعمد تعطيل موعدي!"
+      }
+    ];
+
+    // Default Arabic CBT Emotions
+    const DEFAULT_EMOTIONS = [
+      "قلق", "خوف", "حزن", "إحباط", "توتر", "غضب", "شعور بالذنب", "خجل", "يأس", "عجز", "ارتباك", "ندم", "وحدة", "ضغط نفسي", "خيبة أمل"
     ];
 
     let selectedDistortions = new Set();
     let currentCryptoKey = null;
     let currentPinInput = "";
+    let isAppLocked = true;
+
+    // Audio states for Free Write & CBT
     let mediaRecorder = null;
     let audioChunks = [];
-    let currentAudioArrayBuffer = null;
-    let currentAudioBlob = null;
     let recordTimerInterval = null;
     let recordSeconds = 0;
-    let isAppLocked = true;
+    let activeRecordTarget = "fw"; // "fw" or "cbt"
+
+    let fwAudioBlob = null;
+    let fwAudioArrayBuffer = null;
+
+    let cbtAudioBlob = null;
+    let cbtAudioArrayBuffer = null;
+
+    // Active playing audio state
+    let activeAudio = null;
+    let activeAudioWaveInterval = null;
+
+    // CBT Multi-Emotions state
+    let cbtEmotions = [
+      { id: 1, name: "قلق", intensity: 75, reassessed: 75 }
+    ];
 
     // --- INITIALIZATION ---
     window.addEventListener("DOMContentLoaded", () => {
       renderDistortions();
+      renderEmotionsInputs();
       initTheme();
       checkPinSetup();
       updateCounters();
@@ -1011,18 +1295,15 @@
       const verifier = localStorage.getItem("freecbt_verifier");
 
       if (!saltHex || !verifier) {
-        // Setup new PIN
         const salt = window.crypto.getRandomValues(new Uint8Array(16));
         localStorage.setItem("freecbt_salt", arrayBufferToBase64(salt));
         const key = await deriveKey(currentPinInput, salt);
         currentCryptoKey = key;
-        // Create verification token to validate PIN later
         const checkToken = await encryptPayload(key, { check: "freecbt_valid_pin" });
         localStorage.setItem("freecbt_verifier", JSON.stringify(checkToken));
         unlockApp();
         showToast("تم إنشاء رمز الأمان وتشفير الخزانة بنجاح!");
       } else {
-        // Verify PIN
         try {
           const salt = base64ToArrayBuffer(saltHex);
           const key = await deriveKey(currentPinInput, salt);
@@ -1068,164 +1349,12 @@
       }
     }
 
-    // --- ENCRYPTED AUDIO RECORDING (IN-MEMORY ONLY) ---
-    async function toggleRecording() {
-      if (!mediaRecorder || mediaRecorder.state === "inactive") {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioChunks = [];
-          mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) audioChunks.push(e.data);
-          };
-          mediaRecorder.onstop = async () => {
-            currentAudioBlob = new Blob(audioChunks, { type: "audio/webm" });
-            currentAudioArrayBuffer = await currentAudioBlob.arrayBuffer();
-            document.getElementById("audioPreview").style.display = "block";
-            document.getElementById("audioDurationText").innerText = `تسجيل صوتي مشفر (${recordSeconds} ثانية)`;
-            clearInterval(recordTimerInterval);
-            document.getElementById("recordTimer").style.display = "none";
-            document.getElementById("recordBtn").classList.remove("recording");
-            document.getElementById("recordStatus").innerText = "تم حفظ الصوت بالذاكرة الحية ومشفر";
-            // Stop tracks to release mic
-            stream.getTracks().forEach(t => t.stop());
-          };
-
-          mediaRecorder.start();
-          recordSeconds = 0;
-          document.getElementById("recordBtn").classList.add("recording");
-          document.getElementById("recordStatus").innerText = "جارِ التسجيل... اضغط للإيقاف";
-          document.getElementById("recordTimer").style.display = "block";
-          recordTimerInterval = setInterval(() => {
-            recordSeconds++;
-            const mins = String(Math.floor(recordSeconds / 60)).padStart(2, "0");
-            const secs = String(recordSeconds % 60).padStart(2, "0");
-            document.getElementById("recordTimer").innerText = `${mins}:${secs}`;
-          }, 1000);
-
-        } catch (err) {
-          alert("تعذر الوصول إلى الميكروفون. يرجى منح الإذن للتسجيل.");
-        }
-      } else if (mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-      }
-    }
-
-    function playRecordedAudio() {
-      if (currentAudioBlob) {
-        const url = URL.createObjectURL(currentAudioBlob);
-        const audio = new Audio(url);
-        audio.play();
-        audio.onended = () => URL.revokeObjectURL(url);
-      }
-    }
-
-    function discardAudio() {
-      currentAudioBlob = null;
-      currentAudioArrayBuffer = null;
-      document.getElementById("audioPreview").style.display = "none";
-      document.getElementById("recordStatus").innerText = "اضغط لتسجيل ملاحظة صوتية مشفرة";
-    }
-
-    // --- CBT DISTORTIONS UI ---
-    function renderDistortions() {
-      const container = document.getElementById("distortionGrid");
-      container.innerHTML = "";
-      DISTORTIONS.forEach(d => {
-        const tag = document.createElement("div");
-        tag.className = "distortion-tag";
-        tag.innerText = d.name;
-        tag.title = d.desc;
-        tag.onclick = () => {
-          if (selectedDistortions.has(d.id)) {
-            selectedDistortions.delete(d.id);
-            tag.classList.remove("selected");
-          } else {
-            selectedDistortions.add(d.id);
-            tag.classList.add("selected");
-          }
-        };
-        container.appendChild(tag);
-      });
-    }
-
-    // --- SAVE FREE WRITE ---
-    async function saveFreeWrite() {
-      const title = document.getElementById("fwTitle").value.trim();
-      const body = document.getElementById("fwBody").value.trim();
-
-      if (!body && !currentAudioArrayBuffer) {
-        showToast("يرجى كتابة نص أو تسجيل صوت لحفظ التدوينة");
-        return;
-      }
-
-      let audioPayload = null;
-      if (currentAudioArrayBuffer) {
-        audioPayload = arrayBufferToBase64(currentAudioArrayBuffer);
-      }
-
-      const item = {
-        id: "fw_" + Date.now(),
-        type: "free_write",
-        title: title || "تدوين حر",
-        body: body,
-        audio: audioPayload,
-        createdAt: new Date().toISOString()
-      };
-
-      await saveEncryptedItem(item);
-      document.getElementById("fwTitle").value = "";
-      document.getElementById("fwBody").value = "";
-      discardAudio();
-      updateCounters();
-      showToast("تم حفظ وتشفير التدوينة بنجاح!");
-      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
-    }
-
-    // --- SAVE CBT THOUGHT ---
-    async function saveCbtThought() {
-      const situation = document.getElementById("cbtSituation").value.trim();
-      const automatic = document.getElementById("cbtAutomatic").value.trim();
-      const emotionName = document.getElementById("cbtEmotionName").value.trim() || "شعور عام";
-      const initialIntensity = parseInt(document.getElementById("cbtInitialIntensity").value);
-      const alternative = document.getElementById("cbtAlternative").value.trim();
-      const reassessedIntensity = parseInt(document.getElementById("cbtReassessedIntensity").value);
-
-      if (!automatic && !situation) {
-        showToast("يرجى ملء الفكرة التلقائية أو الموقف على الأقل");
-        return;
-      }
-
-      const item = {
-        id: "cbt_" + Date.now(),
-        type: "cbt",
-        title: automatic || situation,
-        situation,
-        automaticThought: automatic,
-        emotion: { name: emotionName, intensity: initialIntensity, reassessed: reassessedIntensity },
-        distortions: Array.from(selectedDistortions),
-        alternativeThought: alternative,
-        createdAt: new Date().toISOString()
-      };
-
-      await saveEncryptedItem(item);
-      // Reset form
-      document.getElementById("cbtSituation").value = "";
-      document.getElementById("cbtAutomatic").value = "";
-      document.getElementById("cbtEmotionName").value = "";
-      document.getElementById("cbtAlternative").value = "";
-      selectedDistortions.clear();
-      renderDistortions();
-      showToast("تم تفكيك وحفظ الفكرة بنجاح!");
-      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
-    }
-
-    // --- INDEXEDDB STORAGE ENGINE (GIGABYTES CAPACITY FOR AUDIO) ---
+    // --- INDEXEDDB STORAGE ENGINE (DEDUPLICATED & GIGABYTES CAPACITY) ---
     const DB_NAME = "FreeCBT_DB";
     const STORE_NAME = "encrypted_items";
 
     function openDB() {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         if (!window.indexedDB) {
           resolve(null);
           return;
@@ -1244,25 +1373,36 @@
 
     async function getEncryptedStore() {
       const db = await openDB();
+      let rawList = [];
+
       if (db) {
-        return new Promise((resolve) => {
+        rawList = await new Promise((resolve) => {
           try {
             const tx = db.transaction(STORE_NAME, "readonly");
             const store = tx.objectStore(STORE_NAME);
             const req = store.getAll();
-            req.onsuccess = () => {
-              const items = req.result || [];
-              items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-              resolve(items);
-            };
+            req.onsuccess = () => resolve(req.result || []);
             req.onerror = () => resolve([]);
           } catch (e) {
             resolve([]);
           }
         });
+      } else {
+        const raw = localStorage.getItem("freecbt_items");
+        rawList = raw ? JSON.parse(raw) : [];
       }
-      const raw = localStorage.getItem("freecbt_items");
-      return raw ? JSON.parse(raw) : [];
+
+      // Deduplicate by ID to eliminate any historical duplicate bug
+      const seen = new Set();
+      const uniqueList = [];
+      for (const item of rawList) {
+        if (item && item.id && !seen.has(item.id)) {
+          seen.add(item.id);
+          uniqueList.push(item);
+        }
+      }
+      uniqueList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return uniqueList;
     }
 
     async function saveEncryptedItem(item) {
@@ -1297,11 +1437,456 @@
       calculateStats();
     }
 
-    // --- LOAD & RENDER HISTORY ---
+    // --- ENCRYPTED AUDIO RECORDING (FREE WRITE & CBT) ---
+    async function toggleRecording(target = "fw") {
+      activeRecordTarget = target;
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+          };
+          mediaRecorder.onstop = async () => {
+            const blob = new Blob(audioChunks, { type: "audio/webm" });
+            const buffer = await blob.arrayBuffer();
+
+            if (activeRecordTarget === "fw") {
+              fwAudioBlob = blob;
+              fwAudioArrayBuffer = buffer;
+              renderWaveformPlayer("audioPreview", blob, recordSeconds, () => {
+                fwAudioBlob = null;
+                fwAudioArrayBuffer = null;
+                document.getElementById("audioPreview").style.display = "none";
+                document.getElementById("recordStatus").innerText = "اضغط لتسجيل ملاحظة صوتية مشفرة";
+              });
+              document.getElementById("recordBtn").classList.remove("recording");
+              document.getElementById("recordStatus").innerText = "ملاحظة صوتية جاهزة ومشفرة بالـ RAM";
+            } else {
+              cbtAudioBlob = blob;
+              cbtAudioArrayBuffer = buffer;
+              renderWaveformPlayer("cbtAudioPreview", blob, recordSeconds, () => {
+                cbtAudioBlob = null;
+                cbtAudioArrayBuffer = null;
+                document.getElementById("cbtAudioPreview").style.display = "none";
+                document.getElementById("cbtRecordStatus").innerText = "انقر على المايك لتسجيل صوت مرافق للفكرة";
+              });
+              document.getElementById("cbtRecordBtn").style.color = "var(--primary)";
+              document.getElementById("cbtRecordStatus").innerText = "صوت مرافق للفكرة جاهز ومشفر";
+            }
+
+            clearInterval(recordTimerInterval);
+            document.getElementById("recordTimer").style.display = "none";
+            stream.getTracks().forEach(t => t.stop());
+          };
+
+          mediaRecorder.start();
+          recordSeconds = 0;
+          if (target === "fw") {
+            document.getElementById("recordBtn").classList.add("recording");
+            document.getElementById("recordStatus").innerText = "جارِ التسجيل... اضغط مجدداً للإيقاف";
+            document.getElementById("recordTimer").style.display = "block";
+          } else {
+            document.getElementById("cbtRecordBtn").style.color = "#dc2626";
+            document.getElementById("cbtRecordStatus").innerText = "جارِ تسجيل صوت للفكرة... اضغط المايك للإيقاف";
+          }
+
+          recordTimerInterval = setInterval(() => {
+            recordSeconds++;
+            const mins = String(Math.floor(recordSeconds / 60)).padStart(2, "0");
+            const secs = String(recordSeconds % 60).padStart(2, "0");
+            document.getElementById("recordTimer").innerText = `${mins}:${secs}`;
+          }, 1000);
+
+        } catch (err) {
+          alert("تعذر الوصول إلى الميكروفون. يرجى منح الإذن للتسجيل.");
+        }
+      } else if (mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+    }
+
+    // --- REUSABLE WAVEFORM AUDIO PLAYER ---
+    function renderWaveformPlayer(containerId, blob, durationSecs = 0, onDiscard = null) {
+      const container = document.getElementById(containerId);
+      container.style.display = "block";
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+
+      // Generate 28 waveform bars with pseudo heights
+      let barsHtml = "";
+      const heights = [30, 45, 60, 80, 50, 90, 75, 40, 65, 85, 100, 70, 55, 90, 80, 40, 60, 95, 70, 45, 85, 60, 40, 75, 90, 65, 50, 35];
+      for (let i = 0; i < heights.length; i++) {
+        barsHtml += `<div class="waveform-bar" style="height: ${heights[i]}%;" data-idx="${i}"></div>`;
+      }
+
+      container.innerHTML = `
+        <div class="audio-player-card">
+          <div class="audio-player-controls">
+            <button class="icon-btn play-pause-btn" style="width: 38px; height: 38px; background: var(--primary); color: #fff; border: none;" title="تشغيل">
+              <svg viewBox="0 0 24 24" style="stroke: none; fill: currentColor;"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            </button>
+
+            <div class="waveform-container">
+              ${barsHtml}
+            </div>
+
+            <span class="audio-time">00:00 / 00:00</span>
+
+            ${onDiscard ? `
+            <button class="icon-btn discard-btn" style="width: 32px; height: 32px; color: var(--danger); border: none;" title="حذف التسجيل">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      const playBtn = container.querySelector(".play-pause-btn");
+      const timeText = container.querySelector(".audio-time");
+      const waveBars = container.querySelectorAll(".waveform-bar");
+      const waveContainer = container.querySelector(".waveform-container");
+
+      const formatTime = (secs) => {
+        if (isNaN(secs) || secs < 0) return "00:00";
+        const m = String(Math.floor(secs / 60)).padStart(2, "0");
+        const s = String(Math.floor(secs % 60)).padStart(2, "0");
+        return `${m}:${s}`;
+      };
+
+      audio.onloadedmetadata = () => {
+        timeText.innerText = `00:00 / ${formatTime(audio.duration)}`;
+      };
+
+      const updateProgress = () => {
+        timeText.innerText = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration || durationSecs)}`;
+        const pct = (audio.currentTime / (audio.duration || 1));
+        const playedCount = Math.floor(pct * waveBars.length);
+        waveBars.forEach((bar, idx) => {
+          if (idx <= playedCount) bar.classList.add("played");
+          else bar.classList.remove("played");
+        });
+      };
+
+      audio.ontimeupdate = updateProgress;
+
+      playBtn.onclick = () => {
+        if (audio.paused) {
+          if (activeAudio && activeAudio !== audio) activeAudio.pause();
+          activeAudio = audio;
+          audio.play();
+          playBtn.innerHTML = `<svg viewBox="0 0 24 24" style="stroke: none; fill: currentColor;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+        } else {
+          audio.pause();
+          playBtn.innerHTML = `<svg viewBox="0 0 24 24" style="stroke: none; fill: currentColor;"><polygon points="6 4 20 12 6 20 6 4"/></svg>`;
+        }
+      };
+
+      audio.onended = () => {
+        playBtn.innerHTML = `<svg viewBox="0 0 24 24" style="stroke: none; fill: currentColor;"><polygon points="6 4 20 12 6 20 6 4"/></svg>`;
+        waveBars.forEach(b => b.classList.remove("played"));
+      };
+
+      // Waveform scrubbing
+      waveContainer.onclick = (e) => {
+        const rect = waveContainer.getBoundingClientRect();
+        // Handle RTL: click from right is progress
+        const clickX = e.clientX - rect.left;
+        const ratio = document.dir === "rtl" ? (1 - clickX / rect.width) : (clickX / rect.width);
+        if (audio.duration) {
+          audio.currentTime = ratio * audio.duration;
+          updateProgress();
+        }
+      };
+
+      if (onDiscard) {
+        const discardBtn = container.querySelector(".discard-btn");
+        discardBtn.onclick = () => {
+          audio.pause();
+          URL.revokeObjectURL(audioUrl);
+          onDiscard();
+        };
+      }
+    }
+
+    // --- MULTI-EMOTION & AUTOCOMPLETE LOGIC ---
+    function getStoredEmotions() {
+      const custom = localStorage.getItem("freecbt_saved_emotions");
+      const set = new Set(DEFAULT_EMOTIONS);
+      if (custom) {
+        JSON.parse(custom).forEach(e => set.add(e));
+      }
+      return Array.from(set);
+    }
+
+    function saveCustomEmotion(name) {
+      if (!name || !name.trim()) return;
+      const clean = name.trim();
+      const custom = localStorage.getItem("freecbt_saved_emotions");
+      const list = custom ? JSON.parse(custom) : [];
+      if (!list.includes(clean) && !DEFAULT_EMOTIONS.includes(clean)) {
+        list.push(clean);
+        localStorage.setItem("freecbt_saved_emotions", JSON.stringify(list));
+      }
+    }
+
+    function renderEmotionsInputs() {
+      const container = document.getElementById("emotionsContainer");
+      container.innerHTML = "";
+
+      cbtEmotions.forEach((em, index) => {
+        const row = document.createElement("div");
+        row.className = "emotion-row";
+        row.innerHTML = `
+          <div class="emotion-row-header">
+            <input type="text" class="emotion-name-input" value="${em.name}" placeholder="اسم الشعور (قلق، خوف، إحباط)..." oninput="handleEmotionNameChange(${em.id}, this.value)" onfocus="showEmotionAutocomplete(${em.id}, this.value)">
+            ${cbtEmotions.length > 1 ? `
+              <button type="button" class="emotion-remove-btn" onclick="removeEmotionRow(${em.id})" title="حذف هذا الشعور">✕</button>
+            ` : ''}
+          </div>
+
+          <div class="autocomplete-chips" id="autocomplete-${em.id}"></div>
+
+          <div class="slider-container">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">خفيف</span>
+            <input type="range" min="0" max="100" value="${em.intensity}" oninput="handleEmotionIntensityChange(${em.id}, this.value)">
+            <span class="slider-val" id="val-intensity-${em.id}">${em.intensity}%</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      renderReassessmentInputs();
+    }
+
+    function addEmotionRow() {
+      const newId = Date.now();
+      cbtEmotions.push({ id: newId, name: "", intensity: 75, reassessed: 75 });
+      renderEmotionsInputs();
+    }
+
+    function removeEmotionRow(id) {
+      cbtEmotions = cbtEmotions.filter(e => e.id !== id);
+      renderEmotionsInputs();
+    }
+
+    function handleEmotionNameChange(id, val) {
+      const em = cbtEmotions.find(e => e.id === id);
+      if (em) {
+        em.name = val;
+        renderReassessmentInputs();
+        showEmotionAutocomplete(id, val);
+      }
+    }
+
+    function handleEmotionIntensityChange(id, val) {
+      const em = cbtEmotions.find(e => e.id === id);
+      if (em) {
+        em.intensity = parseInt(val);
+        // Start the reassessment slider at the same initial intensity!
+        em.reassessed = em.intensity;
+        document.getElementById(`val-intensity-${id}`).innerText = `${val}%`;
+        renderReassessmentInputs();
+      }
+    }
+
+    function showEmotionAutocomplete(id, query) {
+      const box = document.getElementById(`autocomplete-${id}`);
+      if (!box) return;
+      const all = getStoredEmotions();
+      const q = query ? query.trim().toLowerCase() : "";
+      const matches = all.filter(e => !q || e.toLowerCase().includes(q)).slice(0, 7);
+
+      box.innerHTML = "";
+      matches.forEach(item => {
+        const chip = document.createElement("div");
+        chip.className = "emotion-chip";
+        chip.innerText = item;
+        chip.onclick = () => {
+          const em = cbtEmotions.find(e => e.id === id);
+          if (em) {
+            em.name = item;
+            renderEmotionsInputs();
+          }
+        };
+        box.appendChild(chip);
+      });
+    }
+
+    function renderReassessmentInputs() {
+      const container = document.getElementById("reassessmentContainer");
+      container.innerHTML = "";
+
+      if (cbtEmotions.length === 0) {
+        container.innerHTML = `<div style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">أضف مشاعرك في الخطوة 3 أولاً ليتم تقييمها هنا</div>`;
+        return;
+      }
+
+      cbtEmotions.forEach(em => {
+        const name = em.name || "شعور";
+        const reassessedVal = (typeof em.reassessed === "number") ? em.reassessed : em.intensity;
+        const drop = em.intensity - reassessedVal;
+
+        const row = document.createElement("div");
+        row.style.marginBottom = "14px";
+        row.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 0.92rem; font-weight: 700;">${name} (الأولية: ${em.intensity}%)</span>
+            <span id="reassess-tag-${em.id}" class="${drop > 0 ? 'badge-relief-good' : 'badge-relief-neutral'}">
+              ${reassessedVal}% ${drop > 0 ? `(↓ ${drop}%)` : drop < 0 ? `(↑ ${Math.abs(drop)}%)` : '(ثابت)'}
+            </span>
+          </div>
+          <div class="slider-container">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">مرتاح 0%</span>
+            <input type="range" min="0" max="100" value="${reassessedVal}" oninput="handleReassessmentChange(${em.id}, this.value)">
+            <span class="slider-val" style="color: var(--success);" id="reassess-num-${em.id}">${reassessedVal}%</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function handleReassessmentChange(id, val) {
+      const em = cbtEmotions.find(e => e.id === id);
+      if (em) {
+        em.reassessed = parseInt(val);
+        const drop = em.intensity - em.reassessed;
+        document.getElementById(`reassess-num-${id}`).innerText = `${val}%`;
+        const tag = document.getElementById(`reassess-tag-${id}`);
+        tag.className = drop > 0 ? "badge-relief-good" : "badge-relief-neutral";
+        tag.innerHTML = `${val}% ${drop > 0 ? `(↓ ${drop}%)` : drop < 0 ? `(↑ ${Math.abs(drop)}%)` : '(ثابت)'}`;
+      }
+    }
+
+    // --- COGNITIVE DISTORTIONS (ORIGINAL WITH EXAMPLES) ---
+    function renderDistortions() {
+      const container = document.getElementById("distortionList");
+      container.innerHTML = "";
+
+      DISTORTIONS.forEach(d => {
+        const item = document.createElement("div");
+        item.className = "distortion-item" + (selectedDistortions.has(d.id) ? " selected" : "");
+        item.innerHTML = `
+          <div class="distortion-item-header">
+            <span class="distortion-name">${d.name}</span>
+            <div class="distortion-checkbox">${selectedDistortions.has(d.id) ? '✓' : ''}</div>
+          </div>
+          <div class="distortion-desc">${d.desc}</div>
+          <div class="distortion-example">${d.example}</div>
+        `;
+        item.onclick = () => {
+          if (selectedDistortions.has(d.id)) {
+            selectedDistortions.delete(d.id);
+            item.classList.remove("selected");
+            item.querySelector(".distortion-checkbox").innerText = "";
+          } else {
+            selectedDistortions.add(d.id);
+            item.classList.add("selected");
+            item.querySelector(".distortion-checkbox").innerText = "✓";
+          }
+        };
+        container.appendChild(item);
+      });
+    }
+
+    // --- SAVE FREE WRITE ---
+    async function saveFreeWrite() {
+      const title = document.getElementById("fwTitle").value.trim();
+      const body = document.getElementById("fwBody").value.trim();
+
+      if (!body && !fwAudioArrayBuffer) {
+        showToast("يرجى كتابة نص أو تسجيل صوت لحفظ التدوينة");
+        return;
+      }
+
+      let audioPayload = null;
+      if (fwAudioArrayBuffer) {
+        audioPayload = arrayBufferToBase64(fwAudioArrayBuffer);
+      }
+
+      const item = {
+        id: "fw_" + Date.now(),
+        type: "free_write",
+        title: title || "تدوين حر",
+        body: body,
+        audio: audioPayload,
+        createdAt: new Date().toISOString()
+      };
+
+      await saveEncryptedItem(item);
+      document.getElementById("fwTitle").value = "";
+      document.getElementById("fwBody").value = "";
+      fwAudioBlob = null;
+      fwAudioArrayBuffer = null;
+      document.getElementById("audioPreview").style.display = "none";
+      updateCounters();
+      showToast("تم الحفظ بنجاح!");
+      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
+    }
+
+    // --- SAVE CBT THOUGHT ---
+    async function saveCbtThought() {
+      const situation = document.getElementById("cbtSituation").value.trim();
+      const automatic = document.getElementById("cbtAutomatic").value.trim();
+      const alternative = document.getElementById("cbtAlternative").value.trim();
+
+      if (!automatic && !situation) {
+        showToast("يرجى ملء الفكرة التلقائية أو الموقف على الأقل");
+        return;
+      }
+
+      // Save custom emotion names for autocomplete
+      cbtEmotions.forEach(em => {
+        if (em.name) saveCustomEmotion(em.name);
+      });
+
+      let audioPayload = null;
+      if (cbtAudioArrayBuffer) {
+        audioPayload = arrayBufferToBase64(cbtAudioArrayBuffer);
+      }
+
+      const item = {
+        id: "cbt_" + Date.now(),
+        type: "cbt",
+        title: alternative || automatic || situation || "فكرة بديلة",
+        situation,
+        automaticThought: automatic,
+        emotions: cbtEmotions.map(e => ({
+          name: e.name || "شعور",
+          intensity: e.intensity,
+          reassessed: (typeof e.reassessed === "number") ? e.reassessed : e.intensity
+        })),
+        distortions: Array.from(selectedDistortions),
+        alternativeThought: alternative,
+        audio: audioPayload,
+        createdAt: new Date().toISOString()
+      };
+
+      await saveEncryptedItem(item);
+
+      // Reset form
+      document.getElementById("cbtSituation").value = "";
+      document.getElementById("cbtAutomatic").value = "";
+      document.getElementById("cbtAlternative").value = "";
+      selectedDistortions.clear();
+      renderDistortions();
+      cbtAudioBlob = null;
+      cbtAudioArrayBuffer = null;
+      document.getElementById("cbtAudioPreview").style.display = "none";
+      cbtEmotions = [{ id: 1, name: "قلق", intensity: 75, reassessed: 75 }];
+      renderEmotionsInputs();
+
+      showToast("تم الحفظ بنجاح!");
+      switchTab("screen-history", document.querySelectorAll(".nav-item")[2]);
+    }
+
+    // --- LOAD & RENDER HISTORY (TITLES, SHARING, WAVEFORMS, ELEGANT BADGES) ---
     async function loadHistory() {
       if (!currentCryptoKey) return;
       const store = await getEncryptedStore();
       const listEl = document.getElementById("historyList");
+      listEl.innerHTML = "";
       document.getElementById("historyCount").innerText = `${store.length} تدوينات`;
 
       if (store.length === 0) {
@@ -1312,83 +1897,138 @@
         return;
       }
 
-      listEl.innerHTML = "";
       for (const record of store) {
         try {
           const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
           const card = document.createElement("div");
           card.className = "history-card";
+          card.id = `history-card-${item.id}`;
 
           const dateStr = new Date(item.createdAt).toLocaleDateString("ar-EG", {
             month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
           });
 
           let contentHtml = "";
+          let emotionsBadgesHtml = "";
+
           if (item.type === "free_write") {
+            const displayTitle = item.title || "تدوين حر";
             contentHtml = `
               <div class="history-card-header">
                 <span class="history-tag">✏️ تدوين حر</span>
                 <span class="history-time">${dateStr}</span>
               </div>
-              <h4 style="font-weight: 700; margin-bottom: 6px;">${item.title}</h4>
+              <h4 class="history-title">${displayTitle}</h4>
               <div class="history-body">${item.body || ""}</div>
             `;
           } else {
-            const drop = (item.emotion.intensity - item.emotion.reassessed);
+            // CBT Thought: Title is the Rational Alternative Thought!
+            const displayTitle = item.alternativeThought || item.automaticThought || "فكرة بديلة";
+
+            if (item.emotions && Array.isArray(item.emotions)) {
+              emotionsBadgesHtml = item.emotions.map(em => {
+                const drop = em.intensity - em.reassessed;
+                if (drop > 0) {
+                  return `<span class="badge-relief-good">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (↓ ${drop}%)</span>`;
+                } else if (drop === 0) {
+                  return `<span class="badge-relief-neutral">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (ثابت)</span>`;
+                } else {
+                  return `<span class="badge-relief-neutral">${em.name}: ${em.intensity}% ➔ ${em.reassessed}% (↑ ${Math.abs(drop)}%)</span>`;
+                }
+              }).join(" ");
+            } else if (item.emotion) {
+              const drop = item.emotion.intensity - item.emotion.reassessed;
+              emotionsBadgesHtml = drop > 0
+                ? `<span class="badge-relief-good">${item.emotion.name}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (↓ ${drop}%)</span>`
+                : `<span class="badge-relief-neutral">${item.emotion.name}: ${item.emotion.intensity}% ➔ ${item.emotion.reassessed}% (ثابت)</span>`;
+            }
+
             contentHtml = `
               <div class="history-card-header">
                 <span class="history-tag" style="background: rgba(16,185,129,0.1); color: var(--success);">🧠 فكرة CBT</span>
                 <span class="history-time">${dateStr}</span>
               </div>
-              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 4px;">الموقف: ${item.situation || "غير محدد"}</div>
-              <h4 style="font-weight: 700; margin-bottom: 6px;">💭 "${item.automaticThought}"</h4>
-              <div style="font-size: 0.85rem; color: var(--primary); font-weight: 600; margin-bottom: 6px;">
-                💡 البديل: "${item.alternativeThought || "لم يدون رد بعد"}"
+              <h4 class="history-title">💡 ${displayTitle}</h4>
+              <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">
+                💭 الفكرة التلقائية: "${item.automaticThought || item.title}"
               </div>
-              <div style="display: flex; gap: 8px; font-size: 0.8rem; margin-top: 6px;">
-                <span style="background: var(--bg); padding: 2px 8px; border-radius: 6px;">${item.emotion.name}: ${item.emotion.intensity}% → ${item.emotion.reassessed}% (تحسن ↓ ${drop}%)</span>
-              </div>
+              ${item.situation ? `<div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">الموقف: ${item.situation}</div>` : ''}
+              <div class="history-emotions-row">${emotionsBadgesHtml}</div>
             `;
           }
 
-          let audioBtnHtml = "";
+          let audioContainerHtml = "";
           if (item.audio) {
-            audioBtnHtml = `
-              <button class="icon-btn" onclick="playDecryptedAudio('${item.id}')" title="تشغيل الصوت المشفر" style="width: 32px; height: 32px; margin-left: auto;">
-                ▶️
-              </button>
-            `;
+            audioContainerHtml = `<div id="audio-player-${item.id}"></div>`;
           }
 
-          card.innerHTML = contentHtml + `
+          card.innerHTML = contentHtml + audioContainerHtml + `
             <div class="history-actions">
-              ${audioBtnHtml}
-              <button class="icon-btn" onclick="deleteItem('${item.id}')" title="حذف" style="width: 32px; height: 32px; color: var(--danger);">
-                🗑️
+              <button class="icon-btn" onclick="shareRecord('${item.id}')" title="مشاركة التدوينة" style="width: 34px; height: 34px;">
+                <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </button>
+              <button class="icon-btn" onclick="deleteItem('${item.id}')" title="حذف" style="width: 34px; height: 34px; color: var(--danger);">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               </button>
             </div>
           `;
 
           listEl.appendChild(card);
+
+          if (item.audio) {
+            const buffer = base64ToArrayBuffer(item.audio);
+            const blob = new Blob([buffer], { type: "audio/webm" });
+            renderWaveformPlayer(`audio-player-${item.id}`, blob);
+          }
+
         } catch (e) {
           console.error("Decryption error for record", e);
         }
       }
     }
 
-    async function playDecryptedAudio(itemId) {
+    // --- SHARE NOTE RECORD ---
+    async function shareRecord(itemId) {
       if (!currentCryptoKey) return;
       const store = await getEncryptedStore();
       const record = store.find(r => r.id === itemId);
-      if (record) {
-        const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
-        if (item.audio) {
-          const buffer = base64ToArrayBuffer(item.audio);
-          const blob = new Blob([buffer], { type: "audio/webm" });
-          const url = URL.createObjectURL(blob);
-          const audio = new Audio(url);
-          audio.play();
-          audio.onended = () => URL.revokeObjectURL(url);
+      if (!record) return;
+
+      const item = await decryptPayload(currentCryptoKey, record.encrypted.ciphertext, record.encrypted.iv);
+      let shareText = "";
+
+      if (item.type === "free_write") {
+        shareText = `[تدوين حر - FreeCBT Lite]\n` +
+          `العنوان: ${item.title}\n` +
+          `التاريخ: ${new Date(item.createdAt).toLocaleString("ar-EG")}\n\n` +
+          `${item.body || ""}`;
+      } else {
+        let emotionsSummary = "";
+        if (item.emotions && Array.isArray(item.emotions)) {
+          emotionsSummary = item.emotions.map(e => `${e.name} (${e.intensity}% -> ${e.reassessed}%)`).join("، ");
+        }
+        shareText = `[تفكيك فكرة CBT - FreeCBT Lite]\n` +
+          `الفكرة العقلانية البديلة: ${item.alternativeThought || item.title}\n` +
+          `الفكرة التلقائية: ${item.automaticThought || ""}\n` +
+          (item.situation ? `الموقف: ${item.situation}\n` : "") +
+          (emotionsSummary ? `المشاعر: ${emotionsSummary}\n` : "") +
+          `التاريخ: ${new Date(item.createdAt).toLocaleString("ar-EG")}`;
+      }
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: item.title || "FreeCBT Note",
+            text: shareText
+          });
+          showToast("تم فتح خيارات المشاركة!");
+        } catch (e) {}
+      } else {
+        try {
+          await navigator.clipboard.writeText(shareText);
+          showToast("تم نسخ محتوى التدوينة للمشاركة! 📋");
+        } catch (err) {
+          showToast("تعذر النسخ تلقائياً");
         }
       }
     }
@@ -1433,13 +2073,16 @@
           const dKey = item.createdAt.split("T")[0];
           activeDays.add(dKey);
 
-          if (item.type === "cbt" && item.emotion) {
-            const drop = item.emotion.intensity - item.emotion.reassessed;
-            if (item.emotion.intensity > 0) {
-              const dropPct = Math.round((drop / item.emotion.intensity) * 100);
-              totalRelief += Math.max(0, dropPct);
-              reliefCount++;
-            }
+          if (item.type === "cbt") {
+            const emList = item.emotions || (item.emotion ? [item.emotion] : []);
+            emList.forEach(em => {
+              const drop = em.intensity - em.reassessed;
+              if (em.intensity > 0) {
+                const dropPct = Math.round((drop / em.intensity) * 100);
+                totalRelief += Math.max(0, dropPct);
+                reliefCount++;
+              }
+            });
             if (item.distortions) {
               item.distortions.forEach(dId => {
                 distortionCounts[dId] = (distortionCounts[dId] || 0) + 1;
