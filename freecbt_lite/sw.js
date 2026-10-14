@@ -1,4 +1,4 @@
-const CACHE_NAME = "freecbt-lite-v2";
+const CACHE_NAME = "freecbt-lite-v3";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
