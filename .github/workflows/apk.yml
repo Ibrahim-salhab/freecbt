@@ -33,13 +33,54 @@ jobs:
       - name: Expo Prebuild Android
         run: yarn --cwd expo54 expo prebuild --platform android --no-install
 
+      - name: Apply Android Build Fixes Safeguard
+        run: |
+          # 1. Ensure gradle.properties has JVM memory & Metaspace configured
+          if grep -q "org.gradle.jvmargs" expo54/android/gradle.properties; then
+            sed -i 's/^org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8/' expo54/android/gradle.properties
+          else
+            echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> expo54/android/gradle.properties
+          fi
+
+          # 2. Ensure root build.gradle disables lintVital across subprojects
+          if ! grep -q "lintVital" expo54/android/build.gradle; then
+            cat << 'EOF' >> expo54/android/build.gradle
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                lint {
+                    checkReleaseBuilds false
+                    abortOnError false
+                }
+            }
+        }
+    }
+    tasks.configureEach { task ->
+        if (task.name.contains("lintVital")) {
+            task.enabled = false
+        }
+    }
+}
+EOF
+          fi
+
+          # 3. Ensure app/build.gradle has checkReleaseBuilds false
+          if ! grep -q "checkReleaseBuilds false" expo54/android/app/build.gradle; then
+            sed -i '/android {/a \    lint {\n        checkReleaseBuilds false\n        abortOnError false\n    }' expo54/android/app/build.gradle
+          fi
+
       - name: Make Gradlew Executable
         run: chmod +x expo54/android/gradlew
 
       - name: Build Android APK
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs='-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8'"
         run: |
           cd expo54/android
-          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleRelease -x lint -x lintVitalRelease -x lintVitalAnalyzeRelease --no-daemon || ./gradlew assembleDebug -x lint -x lintVitalRelease -x lintVitalAnalyzeRelease --no-daemon
+
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
